@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/header";
+import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar";
+import PrimaryDraw from "@/components/primary-draw";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,10 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Navbar />
-
-        {children}
+      <body className={cn("flex justify-center", inter.className)}>
+        <div className="mx-auto flex h-full w-full max-w-none flex-col sm:max-w-full lg:max-w-screen-2xl">
+          <Navbar />
+          <div className="flex h-full w-full overflow-auto">
+            <PrimaryDraw />
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );
