@@ -10,9 +10,9 @@ from channel.views import ChannelViewSet
 
 router = DefaultRouter()
 
-router.register("category", CategoryViewSet)
-router.register("server", ServerViewSet)
-router.register("channel", ChannelViewSet)
+router.register("categories", CategoryViewSet)
+router.register("servers", ServerViewSet)
+router.register("channels", ChannelViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

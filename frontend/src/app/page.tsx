@@ -13,7 +13,7 @@ export default function Home() {
         </div>
         <div className="mt-12 flex flex-col gap-4">
           <p className="text-lg font-semibold">Recommended channels</p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <div>
               <div className="h-[150px] max-w-[300px] bg-blue-500" />
               <div className="flex gap-4 rounded-lg pt-2">

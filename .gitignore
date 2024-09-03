@@ -161,3 +161,4 @@ cython_debug/
 
 notes
 .env.dev
+.env.prod

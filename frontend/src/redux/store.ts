@@ -3,8 +3,10 @@ import { serverSlice } from "./features/server-slice";
 
 export const store = configureStore({
   reducer: {
-    server: serverSlice.reducer,
+    [serverSlice.reducerPath]: serverSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(serverSlice.middleware),
   devTools: process.env.NODE_ENV !== "production",
 });
 

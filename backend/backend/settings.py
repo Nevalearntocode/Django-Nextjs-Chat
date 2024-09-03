@@ -10,26 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import os
 from pathlib import Path
-from dotenv import load_dotenv
-
-load_dotenv()
+from os import getenv, path
+from datetime import timedelta
+import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+dotenv_file = BASE_DIR.parent / ".env.dev"
+
+if path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = getenv("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     # external
     "drf_spectacular",
     "rest_framework",
+    "corsheaders",
     # default
     "django.contrib.admin",
     "django.contrib.auth",
@@ -55,6 +60,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -136,13 +142,25 @@ STATIC_URL = "static/"
 #     os.path.join(BASE_DIR, "media"),
 # ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
+STATIC_URL = "static/"
+MEDIA_URL = "media/"
+STATIC_ROOT = BASE_DIR / "static"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-WEBSITE_URL = os.environ.get("WEBSITE_URL")
+CORS_ALLOWED_ORIGINS = getenv("CORS_ALLOWED_ORIGINS").split(",")
+CORS_ALLOW_CREDENTIALS = True
+
+AUTH_COOKIE_HTTPONLY = getenv("AUTH_COOKIE_HTTPONLY") == "1"
+AUTH_COOKIE_SECURE = getenv("AUTH_COOKIE_SECURE") == "1"
+AUTH_COOKIE_SAMESITE = getenv("AUTH_COOKIE_SAMESITE")
+AUTH_COOKIE_PATH = getenv("AUTH_COOKIE_PATH")
+AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 60
+AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24 * 7
+
+WEBSITE_URL = getenv("WEBSITE_URL")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

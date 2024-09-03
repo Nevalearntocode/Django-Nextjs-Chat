@@ -45,3 +45,5 @@ export const serverSlice = baseApi.injectEndpoints({
     }),
   }),
 });
+
+export const { useGetServersQuery } = serverSlice;
