@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
+
   return (
     <div
       className={cn(
