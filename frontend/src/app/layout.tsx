@@ -6,8 +6,7 @@ import Navbar from "@/components/navbar";
 import PrimaryDraw from "@/components/primary-draw";
 import SecondaryDraw from "@/components/secondary-draw";
 import { Separator } from "@/components/ui/separator";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import ReduxProvider from "@/components/providers/redux-provider";
+import RootProvider from "@/components/providers/root-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,8 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("flex justify-center", inter.className)}>
-        <ThemeProvider attribute="class">
-          <ReduxProvider>
+            <RootProvider>
+
             <div className="mx-auto flex h-full w-full max-w-none flex-col sm:max-w-full lg:max-w-screen-2xl">
               <Navbar />
               <div className="flex h-full w-full overflow-auto">
@@ -36,8 +35,7 @@ export default function RootLayout({
                 {children}
               </div>
             </div>
-          </ReduxProvider>
-        </ThemeProvider>
+            </RootProvider>
       </body>
     </html>
   );

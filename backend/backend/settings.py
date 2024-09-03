@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # external
     "drf_spectacular",
     "rest_framework",
+    "rest_framework_simplejwt",
     "corsheaders",
     # default
     "django.contrib.admin",

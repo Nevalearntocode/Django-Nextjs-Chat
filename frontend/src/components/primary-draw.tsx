@@ -45,20 +45,18 @@ export default function PrimaryDraw({}: Props) {
         </Button>
       </div>
       <div className="mt-3 flex w-full flex-col gap-2 px-4">
-        <div className="flex items-center gap-4 rounded-lg bg-muted-foreground/20 p-4 hover:bg-muted-foreground/40">
-          <UserAvatar name="Coder one" />
-          <div className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}>
-            <p className="text-lg font-semibold">Something</p>
-            <p className="text-sm font-light">Something</p>
+        {data?.map((server) => (
+          <div
+            className="flex items-center gap-4 rounded-lg bg-muted-foreground/20 p-4 hover:bg-muted-foreground/40"
+            key={server.id}
+          >
+            <UserAvatar name={server.name} image={server.banner} />
+            <div className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}>
+              <p className="text-lg font-semibold">{server.name}</p>
+              <p className="text-sm font-light">{server.description}</p>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-4 rounded-lg bg-muted-foreground/20 p-4 hover:bg-muted-foreground/40">
-          <UserAvatar name="Coder one" />
-          <div className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}>
-            <p className="text-lg font-semibold">Something</p>
-            <p className="text-sm font-light">Something</p>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

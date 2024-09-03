@@ -2,6 +2,13 @@ import { baseApi } from "../base-api";
 
 type Server = {
   id: string;
+  members: number;
+  name: string;
+  description: string;
+  category: string;
+  owner: string;
+  banner: string;
+  icon: string;
 };
 
 type ServerQueryParams = {

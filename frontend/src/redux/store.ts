@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { serverSlice } from "./features/server-slice";
+import modal from "./features/modal-slice";
 
 export const store = configureStore({
   reducer: {
+    modal,
     [serverSlice.reducerPath]: serverSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
