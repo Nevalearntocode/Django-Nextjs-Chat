@@ -7,7 +7,7 @@ const Logo = () => {
   return (
     <div className="flex items-center">
       <Link href={`/`}>
-        <div className="hidden items-center gap-2 rounded-full bg-sky-200 py-1 pl-1 pr-2 hover:bg-sky-300 sm:flex">
+        <div className="hidden items-center gap-2 rounded-full bg-sky-200 py-1 pl-1 pr-2 hover:bg-sky-300 dark:bg-sky-600 sm:flex">
           <Image
             src={`/logo.jpg`}
             priority
