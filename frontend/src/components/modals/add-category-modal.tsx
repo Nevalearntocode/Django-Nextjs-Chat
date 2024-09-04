@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,7 +25,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal } from "@/redux/features/modal-slice";
-import { Description } from "@radix-ui/react-dialog";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../image-upload";
 

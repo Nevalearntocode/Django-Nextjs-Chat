@@ -1,16 +1,18 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
+import { useGetCategoriesQuery } from "@/redux/features/category-slice";
+import Image from "next/image";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
   const dispatch = useAppDispatch();
+  const { data } = useGetCategoriesQuery();
 
   const onAddCategory = () => {
     dispatch(openModal("category"));
@@ -33,37 +35,25 @@ export default function SecondaryDraw({}: Props) {
           <Plus className="h-4 w-4" />
         </Button>
       </div>
+      {/* TODO: make this a separate component later */}
       <div className="mt-1 flex w-full flex-col gap-2 px-2">
-        <div className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40">
-          <ChatBubbleIcon className="h-5 w-5 font-bold" />
-          <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
-            Programming
-          </p>
-        </div>
-        <div className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40">
-          <ChatBubbleIcon className="h-5 w-5 font-bold" />
-          <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
-            Programming
-          </p>
-        </div>
-        <div className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40">
-          <ChatBubbleIcon className="h-5 w-5 font-bold" />
-          <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
-            Programming
-          </p>
-        </div>
-        <div className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40">
-          <ChatBubbleIcon className="h-5 w-5 font-bold" />
-          <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
-            Programming
-          </p>
-        </div>
-        <div className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40">
-          <ChatBubbleIcon className="h-5 w-5 font-bold" />
-          <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
-            Programming
-          </p>
-        </div>
+        {data?.map((category) => (
+          <div
+            className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40"
+            key={category.id}
+          >
+            <Image
+              src={category.icon}
+              alt={category.name}
+              width={20}
+              height={20}
+              className="h-auto w-auto rounded-full"
+            />
+            <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
+              {category.name}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

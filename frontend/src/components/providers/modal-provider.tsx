@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AddCategoryModal from "../modals/add-category-modal";
+import DrawerSheet from "../drawer-sheet";
 
 export const ModalProvider = () => {
   const [isClient, setIsClient] = useState(false);
@@ -17,6 +18,7 @@ export const ModalProvider = () => {
   return (
     <>
       <AddCategoryModal />
+      <DrawerSheet />
     </>
   );
 };

@@ -44,10 +44,15 @@ export default function PrimaryDraw({}: Props) {
           )}
         </Button>
       </div>
-      <div className="mt-3 flex w-full flex-col gap-2 px-4">
+      <div className={cn("mt-3 flex w-full flex-col gap-2", open && "px-4")}>
+        {/* TODO: make this a separate component later */}
         {data?.map((server) => (
           <div
-            className="flex items-center gap-4 rounded-lg bg-muted-foreground/20 p-4 hover:bg-muted-foreground/40"
+            className={cn(
+              "flex items-center justify-center gap-4 rounded-lg p-4 lg:justify-start",
+              open &&
+                "md:bg-muted-foreground/20 md:hover:bg-muted-foreground/40",
+            )}
             key={server.id}
           >
             <UserAvatar name={server.name} image={server.banner} />
