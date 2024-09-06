@@ -11,7 +11,7 @@ type Props = {};
 
 export default function ChatWidget({}: Props) {
   const [message, setMessage] = React.useState("");
-  const [inputValue, setInputValue] = React.useState("");
+  const [newMessages, setNewMessages] = React.useState<string[]>([]);
 
   const { sendJsonMessage } = useWebsocket(socketUrl, {
     onOpen: () => {
@@ -24,31 +24,31 @@ export default function ChatWidget({}: Props) {
       console.log("error");
     },
     onMessage: (event) => {
-      const jsonMessage = JSON.parse(event.data);
-      setMessage(jsonMessage.text);
+      const data = JSON.parse(event.data);
+      setNewMessages([...newMessages, data.new_message]);
     },
   });
 
   const sendHello = () => {
-    sendJsonMessage({ text: inputValue });
-    setInputValue("");
+    sendJsonMessage({ type: "message", message });
+    // setMessage("");
   };
 
   return (
-    <div className="flex h-full flex-col justify-between dark:bg-muted/20">
-      <div className="h-full flex-1 px-6">
+    <div className="flex h-full flex-col justify-between overflow-hidden dark:bg-muted/20">
+      <div className="h-full flex-1">
         <div className="h-[100px] w-full bg-blue-500" />
       </div>
       <div className="overflow-y-auto px-6">
-        {[...Array(50)].map((_, i) => (
-          <p key={i}>content {i}</p>
+        {newMessages.map((content, i) => (
+          <p key={i}>{content}</p>
         ))}
       </div>
-      <div className="flex gap-4 px-6 py-4">
+      <div className="flex flex-shrink-0 gap-4 overflow-hidden px-6 py-4">
         <Input
           className="border-muted-foreground"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
         />
         <Button onClick={sendHello}>send</Button>
       </div>
