@@ -23,19 +23,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("flex justify-center", inter.className)}>
-            <RootProvider>
-
-            <div className="mx-auto flex h-full w-full max-w-none flex-col sm:max-w-full lg:max-w-screen-2xl">
-              <Navbar />
-              <div className="flex h-full w-full overflow-auto">
-                <PrimaryDraw />
-                <Separator orientation="vertical" />
-                <SecondaryDraw />
-                <Separator orientation="vertical" />
-                {children}
-              </div>
+        <RootProvider>
+          <div className="mx-auto flex h-full w-full max-w-none flex-col sm:max-w-full lg:max-w-screen-2xl">
+            <Navbar />
+            <div className="flex h-full w-full overflow-hidden">
+              <PrimaryDraw />
+              <Separator orientation="vertical" />
+              <SecondaryDraw />
+              <Separator orientation="vertical" />
+              {children}
             </div>
-            </RootProvider>
+          </div>
+        </RootProvider>
       </body>
     </html>
   );

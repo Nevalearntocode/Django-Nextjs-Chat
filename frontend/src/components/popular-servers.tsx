@@ -11,7 +11,7 @@ export default function PopularServers({}: Props) {
   const { data } = useGetServersQuery({});
 
   return (
-    <div className="h-full w-full px-6 pt-14">
+    <div className="h-full w-full overflow-auto px-6 pt-14">
       <div className="flex flex-col gap-1 pt-1">
         <p className="text-4xl font-bold">Programming</p>
         <p className="font-semibold text-muted-foreground">

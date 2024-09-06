@@ -5,9 +5,9 @@ type Props = {};
 
 const Channel = (props: Props) => {
   return (
-    <div>
+    <main className="w-full ">
       <ChatWidget />
-    </div>
+    </main>
   );
 };
 
