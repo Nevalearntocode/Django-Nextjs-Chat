@@ -1,17 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import useWebsocket from "react-use-websocket";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Message, useGetMessagesQuery } from "@/redux/features/message-slice";
 
 const socketUrl = "ws://127.0.0.1:8000/ws/chat/1/";
 
 type Props = {};
 
 export default function ChatWidget({}: Props) {
+  const { data } = useGetMessagesQuery();
   const [message, setMessage] = React.useState("");
-  const [newMessages, setNewMessages] = React.useState<string[]>([]);
+  const [newMessages, setNewMessages] = React.useState<Message[]>([]);
+
+  useEffect(() => {
+    setNewMessages(data ?? []);
+  }, [data]);
 
   const { sendJsonMessage } = useWebsocket(socketUrl, {
     onOpen: () => {
@@ -31,7 +37,7 @@ export default function ChatWidget({}: Props) {
 
   const sendHello = () => {
     sendJsonMessage({ type: "message", message });
-    // setMessage("");
+    setMessage("");
   };
 
   return (
@@ -40,8 +46,8 @@ export default function ChatWidget({}: Props) {
         <div className="h-[100px] w-full bg-blue-500" />
       </div>
       <div className="overflow-y-auto px-6">
-        {newMessages.map((content, i) => (
-          <p key={i}>{content}</p>
+        {newMessages.map((message, i) => (
+          <p key={i}>{message.content}</p>
         ))}
       </div>
       <div className="flex flex-shrink-0 gap-4 overflow-hidden px-6 py-4">

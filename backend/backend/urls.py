@@ -7,6 +7,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from category.views import CategoryViewSet
 from server.views import ServerViewSet
 from channel.views import ChannelViewSet
+from chat.views import MessageViewSet
 from chat.consumers import ChatConsumer
 
 router = DefaultRouter()
@@ -14,6 +15,7 @@ router = DefaultRouter()
 router.register("categories", CategoryViewSet)
 router.register("servers", ServerViewSet)
 router.register("channels", ChannelViewSet)
+router.register("messages", MessageViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,5 +28,5 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 websocket_urlpatterns = [
-    path("ws/chat/<int:server_id>/", ChatConsumer.as_asgi()),
+    path("ws/chat/<str:channels>/", ChatConsumer.as_asgi()),
 ]

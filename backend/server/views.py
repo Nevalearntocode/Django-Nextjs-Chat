@@ -3,7 +3,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import AuthenticationFailed
 from server.models import Server
 from server.serializers import ServerSerializer
-from server.schema import server_list_docs
+from server.schema import list_server_docs
+
 
 class ServerViewSet(ModelViewSet):
     queryset = Server.objects.all()
@@ -35,6 +36,7 @@ class ServerViewSet(ModelViewSet):
                 pass
 
         return queryset
-    @server_list_docs
+
+    @list_server_docs
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
