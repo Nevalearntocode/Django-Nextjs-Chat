@@ -6,13 +6,16 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "./user-avatar";
 import { useGetServersQuery } from "@/redux/features/server-slice";
+import { useSearchParams } from "next/navigation";
 
 type Props = {};
 
 export default function PrimaryDraw({}: Props) {
   const [open, setOpen] = useState(true);
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
 
-  const { data } = useGetServersQuery({});
+  const { data } = useGetServersQuery({category: category ?? undefined});
 
   return (
     <div

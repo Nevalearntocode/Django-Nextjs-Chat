@@ -7,15 +7,28 @@ import { useAppDispatch } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
 import { useGetCategoriesQuery } from "@/redux/features/category-slice";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
   const dispatch = useAppDispatch();
   const { data } = useGetCategoriesQuery();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const categoryParam = searchParams.get("category");
 
   const onAddCategory = () => {
     dispatch(openModal("category"));
+  };
+
+  const onFilterByCategory = (category: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("category", category);
+    if (category === categoryParam) {
+      url.searchParams.delete("category");
+    }
+    router.push(url.toString());
   };
 
   return (
@@ -39,8 +52,12 @@ export default function SecondaryDraw({}: Props) {
       <div className="mt-1 flex w-full flex-col gap-2 px-2">
         {data?.map((category) => (
           <div
-            className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40"
+            className={cn(
+              "flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40",
+              category.name === categoryParam ? "border-2 border-zinc-400" : "",
+            )}
             key={category.id}
+            onClick={() => onFilterByCategory(category.name)}
           >
             <Image
               src={category.icon}
