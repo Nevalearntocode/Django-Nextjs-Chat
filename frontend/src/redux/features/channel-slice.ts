@@ -5,6 +5,7 @@ export type Channel = {
   name: string;
   description: string;
   topic: string;
+  server_banner: string;
 };
 
 type ChannelQueryParams = {
@@ -25,7 +26,14 @@ export const channelSlice = baseApi.injectEndpoints({
         };
       },
     }),
+
+    getChannel: builder.query<Channel, string>({
+      query: (id) => ({
+        url: `/api/channels/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetChannelsQuery } = channelSlice;
+export const { useGetChannelsQuery, useGetChannelQuery } = channelSlice;

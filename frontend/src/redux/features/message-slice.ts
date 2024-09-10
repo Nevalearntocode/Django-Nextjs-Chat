@@ -7,14 +7,23 @@ export type Message = {
   created: string;
 };
 
+export type MessageQueryParams = {
+  channelId?: string;
+};
 
 export const messageSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMessages: builder.query<Message[], void>({
-      query: () => ({
-        url: "/api/messages",
-        method: "GET",
-      }),
+    getMessages: builder.query<Message[], MessageQueryParams>({
+      query: (args) => {
+        let url = `/api/messages/`;
+        if (args.channelId) {
+          url += `?channel=${args.channelId}`;
+        }
+        return {
+          url,
+          method: "GET",
+        };
+      },
     }),
   }),
 });

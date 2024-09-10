@@ -3,12 +3,12 @@ import React from "react";
 
 type Props = {
   params: {
-    id: string;
+    serverId: string;
   };
 };
 
 export default function ServerPage({ params }: Props) {
-  const serverId = params.id;
+  const serverId = params.serverId;
 
   return (
     <div className="w-full p-12">

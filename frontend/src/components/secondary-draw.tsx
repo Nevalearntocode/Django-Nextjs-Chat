@@ -21,7 +21,8 @@ export default function SecondaryDraw({}: Props) {
   const categoryParam = searchParams.get("category");
   const pathname = usePathname();
 
-  const isServerRoute = pathname.startsWith("/servers");
+  const isServerRoute =
+    pathname.startsWith("/servers") || pathname.startsWith("/channels");
   const serverId = isServerRoute && pathname.split("/")[2];
   const { data: channels } = useGetChannelsQuery({
     serverId: serverId ? serverId : undefined,
@@ -39,8 +40,6 @@ export default function SecondaryDraw({}: Props) {
     }
     router.push(url.toString());
   };
-
-  console.log(channels);
 
   return (
     <div
@@ -72,6 +71,7 @@ export default function SecondaryDraw({}: Props) {
                     : "",
                 )}
                 key={"12"}
+                onClick={() => router.push(`/servers/${serverId}/channels/${channel.id}`)}
               >
                 <UserAvatar name={channel.name ?? "else"} />
 
