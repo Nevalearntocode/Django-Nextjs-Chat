@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "./user-avatar";
 import { useGetServersQuery } from "@/redux/features/server-slice";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {};
 
@@ -14,8 +14,9 @@ export default function PrimaryDraw({}: Props) {
   const [open, setOpen] = useState(true);
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
+  const router = useRouter();
 
-  const { data } = useGetServersQuery({category: category ?? undefined});
+  const { data } = useGetServersQuery({ category: category ?? undefined });
 
   return (
     <div
@@ -57,11 +58,16 @@ export default function PrimaryDraw({}: Props) {
                 "md:bg-muted-foreground/20 md:hover:bg-muted-foreground/40",
             )}
             key={server.id}
+            onClick={() => router.push(`/servers/${server.id}`)}
           >
             <UserAvatar name={server.name} image={server.banner} />
             <div className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}>
-              <p className="text-lg font-semibold">{server.name}</p>
-              <p className="text-sm font-light">{server.description}</p>
+              <p className="line-clamp-1 text-lg font-semibold capitalize">
+                {server.name}
+              </p>
+              <p className="line-clamp-1 text-sm font-light">
+                {server.description}
+              </p>
             </div>
           </div>
         ))}

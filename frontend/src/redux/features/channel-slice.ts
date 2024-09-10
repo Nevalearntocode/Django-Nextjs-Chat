@@ -7,13 +7,25 @@ export type Channel = {
   topic: string;
 };
 
+type ChannelQueryParams = {
+  serverId?: string;
+};
+
 export const channelSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCategories: builder.query({
-      query: () => ({
-        url: "/api/channels",
-        method: "GET",
-      }),
+    getChannels: builder.query<Channel[], ChannelQueryParams>({
+      query: (args) => {
+        let url = "/api/channels/";
+        if (args.serverId) {
+          url += `?server=${args.serverId}`;
+        }
+        return {
+          url,
+          method: "GET",
+        };
+      },
     }),
   }),
 });
+
+export const { useGetChannelsQuery } = channelSlice;
