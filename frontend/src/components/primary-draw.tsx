@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { UserAvatar } from "./user-avatar";
 import { useGetServersQuery } from "@/redux/features/server-slice";
 import { useRouter, useSearchParams } from "next/navigation";
+import ServerTooltip from "./sever-tooltip";
 
 type Props = {};
 
@@ -51,25 +52,28 @@ export default function PrimaryDraw({}: Props) {
       <div className={cn("mt-3 flex w-full flex-col gap-2", open && "px-4")}>
         {/* TODO: make this a separate component later */}
         {data?.map((server) => (
-          <div
-            className={cn(
-              "flex items-center justify-center gap-4 rounded-lg p-4 lg:justify-start",
-              open &&
-                "md:bg-muted-foreground/20 md:hover:bg-muted-foreground/40",
-            )}
-            key={server.id}
-            onClick={() => router.push(`/servers/${server.id}`)}
-          >
-            <UserAvatar name={server.name} image={server.banner} />
-            <div className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}>
-              <p className="line-clamp-1 text-lg font-semibold capitalize">
-                {server.name}
-              </p>
-              <p className="line-clamp-1 text-sm font-light">
-                {server.description}
-              </p>
+          <ServerTooltip key={server.id} {...server}>
+            <div
+              className={cn(
+                "flex items-center justify-center gap-4 rounded-lg p-4 lg:justify-start",
+                open &&
+                  "md:bg-muted-foreground/20 md:hover:bg-muted-foreground/40",
+              )}
+              onClick={() => router.push(`/servers/${server.id}`)}
+            >
+              <UserAvatar name={server.name} image={server.banner} />
+              <div
+                className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}
+              >
+                <p className="line-clamp-1 text-left text-lg font-semibold capitalize">
+                  {server.name}
+                </p>
+                <p className="line-clamp-1 text-left text-sm font-light">
+                  {server.description}
+                </p>
+              </div>
             </div>
-          </div>
+          </ServerTooltip>
         ))}
       </div>
     </div>

@@ -50,7 +50,10 @@ export const serverSlice = baseApi.injectEndpoints({
             ]
           : [{ type: "servers", id: "list" }],
     }),
+    getServer: builder.query<Server, string>({
+      query: (id) => ({ url: `/api/servers/${id}`, method: "GET" }),
+    }),
   }),
 });
 
-export const { useGetServersQuery } = serverSlice;
+export const { useGetServersQuery, useGetServerQuery } = serverSlice;
