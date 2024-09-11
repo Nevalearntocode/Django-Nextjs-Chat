@@ -3,27 +3,30 @@
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
 import { useGetCategoriesQuery } from "@/redux/features/category-slice";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useGetChannelsQuery } from "@/redux/features/channel-slice";
 import { UserAvatar } from "./user-avatar";
+import { setChannelName } from "@/redux/features/global-var-slice";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
   const dispatch = useAppDispatch();
   const { data: categories } = useGetCategoriesQuery();
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
   const pathname = usePathname();
+  const { serverName } = useAppSelector((state) => state.globalVar);
 
   const isServerRoute =
     pathname.startsWith("/servers") || pathname.startsWith("/channels");
   const serverId = isServerRoute && pathname.split("/")[2];
+
   const { data: channels } = useGetChannelsQuery({
     serverId: serverId ? serverId : undefined,
   });
@@ -48,7 +51,9 @@ export default function SecondaryDraw({}: Props) {
       )}
     >
       <div className="flex w-full items-center justify-between border-b-2 p-4 pr-2">
-        <p className={cn("hidden text-lg font-bold md:block")}>Explore</p>{" "}
+        <p className={cn("hidden text-lg font-bold md:block")}>
+          {isServerRoute ? serverName : "Explore"}
+        </p>{" "}
         <Button
           className="rounded-full"
           size={"icon"}
@@ -71,7 +76,10 @@ export default function SecondaryDraw({}: Props) {
                     : "",
                 )}
                 key={"12"}
-                onClick={() => router.push(`/servers/${serverId}/channels/${channel.id}`)}
+                onClick={() => {
+                  dispatch(setChannelName(channel.name));
+                  router.push(`/servers/${serverId}/channels/${channel.id}`);
+                }}
               >
                 <UserAvatar name={channel.name ?? "else"} />
 

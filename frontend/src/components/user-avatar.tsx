@@ -6,13 +6,14 @@ import { cn } from "@/lib/utils";
 type Props = {
   image?: string;
   name: string;
+  className?: string;
 };
 
-export function UserAvatar({ image, name }: Props) {
+export function UserAvatar({ image, name, className }: Props) {
   return (
     <Avatar>
       <AvatarImage src={image} alt={`${name}-avatar`} />
-      <AvatarFallback className={cn("")}>
+      <AvatarFallback className={cn("", className)}>
         {name[0].toUpperCase()}
       </AvatarFallback>
     </Avatar>

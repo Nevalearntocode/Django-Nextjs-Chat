@@ -15,17 +15,33 @@ import { UserAvatar } from "./user-avatar";
 import { cn } from "@/lib/utils";
 import { useGetCategoriesQuery } from "@/redux/features/category-slice";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {};
 
 export default function DrawerSheet({}: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
   const { isOpen, type } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
-  const { data: servers } = useGetServersQuery({ qty: 4 });
+  const { data: servers } = useGetServersQuery({
+    qty: 4,
+    category: categoryParam ?? undefined,
+  });
   const { data: categories } = useGetCategoriesQuery();
 
   const onSheetChange = () => {
     dispatch(closeModal());
+  };
+
+  const onFilterByCategory = (category: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("category", category);
+    if (category === categoryParam) {
+      url.searchParams.delete("category");
+    }
+    router.push(url.toString());
   };
 
   const isSheetOpen = type === "mobile-sheet" && isOpen;
@@ -48,6 +64,7 @@ export default function DrawerSheet({}: Props) {
               <div
                 className="flex w-full items-center gap-4 rounded-lg bg-muted-foreground/10 p-4 hover:bg-muted-foreground/40"
                 key={category.id}
+                onClick={() => onFilterByCategory(category.name)}
               >
                 <Image
                   src={category.icon}

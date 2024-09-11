@@ -8,6 +8,8 @@ import { UserAvatar } from "./user-avatar";
 import { useGetServersQuery } from "@/redux/features/server-slice";
 import { useRouter, useSearchParams } from "next/navigation";
 import ServerTooltip from "./sever-tooltip";
+import { useAppDispatch } from "@/redux/hooks";
+import { setServerName } from "@/redux/features/global-var-slice";
 
 type Props = {};
 
@@ -16,6 +18,7 @@ export default function PrimaryDraw({}: Props) {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const { data } = useGetServersQuery({ category: category ?? undefined });
 
@@ -59,7 +62,10 @@ export default function PrimaryDraw({}: Props) {
                 open &&
                   "md:bg-muted-foreground/20 md:hover:bg-muted-foreground/40",
               )}
-              onClick={() => router.push(`/servers/${server.id}`)}
+              onClick={() => {
+                dispatch(setServerName(server.name));
+                router.push(`/servers/${server.id}`);
+              }}
             >
               <UserAvatar name={server.name} image={server.banner} />
               <div

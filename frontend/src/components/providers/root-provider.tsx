@@ -3,6 +3,7 @@
 import { ThemeProvider } from "./theme-provider";
 import { ReduxProvider } from "./redux-provider";
 import { ModalProvider } from "./modal-provider";
+import { GlobalVarProvider } from "./global-var-provider";
 
 export default function RootProvider({
   children,
@@ -12,8 +13,10 @@ export default function RootProvider({
   return (
     <ThemeProvider attribute="class">
       <ReduxProvider>
-        <ModalProvider />
-        {children}
+        <GlobalVarProvider>
+          <ModalProvider />
+          {children}
+        </GlobalVarProvider>
       </ReduxProvider>
     </ThemeProvider>
   );
