@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import useWebsocket from "react-use-websocket";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Message, useGetMessagesQuery } from "@/redux/features/message-slice";
 import { useGetChannelQuery } from "@/redux/features/channel-slice";
 import Image from "next/image";
@@ -24,6 +23,13 @@ export default function ChatWidget({ channelId }: Props) {
   const [newMessages, setNewMessages] = React.useState<Message[]>([]);
   const { data: channel } = useGetChannelQuery(channelId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = useCallback(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, []);
 
   const adjustHeight = () => {
     if (textareaRef.current) {
@@ -35,6 +41,10 @@ export default function ChatWidget({ channelId }: Props) {
   useEffect(() => {
     adjustHeight();
   }, [message]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [channelId, newMessages]);
 
   useEffect(() => {
     setNewMessages(data ?? []);
@@ -59,9 +69,21 @@ export default function ChatWidget({ channelId }: Props) {
     },
   );
 
-  const sendHello = () => {
+  const sendMessage = () => {
     sendJsonMessage({ type: "message", message });
     setMessage("");
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      // i want to check if the message is empty
+      if (message.trim() === "") {
+        event.preventDefault();
+        return;
+      }
+      event.preventDefault();
+      sendMessage();
+    }
   };
 
   if (!channel) {
@@ -90,7 +112,11 @@ export default function ChatWidget({ channelId }: Props) {
           <div className="h-[100px] w-full bg-blue-500" />
         )}
       </div>
-      <div className="flex flex-col gap-2 overflow-y-auto px-6">
+      <div
+        className="flex flex-col gap-2 overflow-y-auto px-6"
+        style={{}}
+        ref={scrollRef}
+      >
         {newMessages.map((message, i) => (
           <div key={i} className="group relative rounded-lg px-4 py-2">
             <div className="flex items-center gap-1">
@@ -118,9 +144,10 @@ export default function ChatWidget({ channelId }: Props) {
           onChange={(e) => setMessage(e.target.value)}
           className="max-h-24 min-h-[40px] resize-none overflow-y-auto"
           rows={1}
+          onKeyDown={handleKeyDown}
         />
         <Button
-          onClick={sendHello}
+          onClick={sendMessage}
           className={cn("absolute bottom-[18px] right-4")}
         >
           <PaperPlaneIcon className="h-4 w-4" />
