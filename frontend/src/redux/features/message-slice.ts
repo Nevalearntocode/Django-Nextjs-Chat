@@ -5,6 +5,8 @@ export type Message = {
   sender: string;
   content: string;
   created: string;
+  edited: string;
+  deleted: string;
 };
 
 export type MessageQueryParams = {

@@ -34,6 +34,8 @@ class ChatConsumer(JsonWebsocketConsumer):
                     "sender": message.sender.username,
                     "content": message.content,
                     "created": message.created.isoformat(),
+                    "edited": message.edited.isoformat(),
+                    "deleted": str(message.deleted),
                 },
             },
         )
@@ -43,4 +45,6 @@ class ChatConsumer(JsonWebsocketConsumer):
         pass
 
     def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(self.room_name, self.channel_name)
+        async_to_sync(self.channel_layer.group_discard)(
+            self.room_name, self.channel_name
+        )

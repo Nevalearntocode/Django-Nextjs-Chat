@@ -12,6 +12,7 @@ import { Pencil, Trash } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 type Props = {
   channelId: string;
@@ -36,6 +37,10 @@ export default function ChatWidget({ channelId }: Props) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 96)}px`;
     }
+  };
+
+  const formatDate = (timestamp: string) => {
+    return format(new Date(timestamp), "h:mm a MM/dd/yyyy"); // i need a more frendly date format
   };
 
   useEffect(() => {
@@ -124,7 +129,10 @@ export default function ChatWidget({ channelId }: Props) {
               <p className="text-sm font-semibold">{message.sender}</p>
             </div>
             <p className="ml-2 text-sm">{message.content}</p>
-            <div className="absolute right-0 top-0 hidden gap-2 group-hover:flex">
+            <div className="absolute right-0 top-0 hidden items-center gap-2 group-hover:flex">
+              <p className="mr-2 hidden text-xs italic group-hover:block">
+                {formatDate(message.created)}
+              </p>
               <Button size={`icon`} variant={`secondary`}>
                 <Pencil className="h-4 w-4" />
               </Button>
