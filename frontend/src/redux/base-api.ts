@@ -7,6 +7,7 @@ import type {
 } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
+import { setLogin, setLogout } from "./features/auth-slice";
 
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
@@ -28,15 +29,16 @@ const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire();
       try {
         const refreshResult = await baseQuery(
-          "/refreshToken",
+          "/api/jwt/refresh/",
           api,
           extraOptions,
         );
         if (refreshResult.data) {
-          //   api.dispatch(tokenReceived(refreshResult.data));
+          // @ts-ignore
+          api.dispatch(setLogin(refreshResult.data.access));
           result = await baseQuery(args, api, extraOptions);
         } else {
-          //   api.dispatch(loggedOut());
+          api.dispatch(setLogout());
         }
       } finally {
         release();

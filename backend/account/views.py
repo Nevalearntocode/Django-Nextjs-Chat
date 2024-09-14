@@ -45,7 +45,9 @@ class CustomTokenVerifyView(TokenVerifyView):
         except TokenError as e:
             raise InvalidToken(e.args[0])
 
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        response_data = {"access": data.get("token")}
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class CustomTokenRefreshView(TokenRefreshView):

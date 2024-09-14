@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal, openModal } from "@/redux/features/modal-slice";
+import { useLoginMutation } from "@/redux/features/account-slice";
+import { setLogin } from "@/redux/features/auth-slice";
 
 type Props = {};
 
@@ -39,6 +41,7 @@ const LoginModal = (props: Props) => {
   const dispatch = useAppDispatch();
   const { isOpen, type } = useAppSelector((state) => state.modal);
   const isModalOpen = isOpen && type === "login";
+  const [login] = useLoginMutation();
 
   const onClose = () => {
     dispatch(closeModal());
@@ -54,8 +57,15 @@ const LoginModal = (props: Props) => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (data: FormType) => {
-    console.log(data);
+  const onSubmit = (data: FormType) => {
+    login(data)
+      .unwrap()
+      .then((res) => {
+        dispatch(setLogin(res.access));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
