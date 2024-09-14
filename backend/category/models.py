@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Category(models.Model):
 
     class Meta:
@@ -11,8 +12,14 @@ class Category(models.Model):
     icon = models.URLField(
         null=True,
         blank=True,
-        default=f"{settings.WEBSITE_URL}/media/category/default-category-icon.png",
     )
 
     def __str__(self) -> str:
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.icon == "":
+            self.icon = (
+                f"{settings.WEBSITE_URL}/media/category/default-category-icon.png"
+            )
+        super().save(*args, **kwargs)

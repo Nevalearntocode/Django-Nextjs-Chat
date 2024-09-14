@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 type ModalState = {
   isOpen: boolean;
-  type: "category" | "mobile-sheet" | null;
+  type: "category" | "mobile-sheet" | "login" | "register" | null;
 };
 
 const initialState = {
