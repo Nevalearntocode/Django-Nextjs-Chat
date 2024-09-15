@@ -8,7 +8,7 @@ import { useGetChannelQuery } from "@/redux/features/channel-slice";
 import Image from "next/image";
 import { env } from "@/env";
 import { UserAvatar } from "./user-avatar";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, X } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,8 @@ export default function ChatWidget({ channelId }: Props) {
   const { data } = useGetMessagesQuery({ channelId });
   const [message, setMessage] = React.useState("");
   const [newMessages, setNewMessages] = React.useState<Message[]>([]);
+  const [messageId, setMessageId] = React.useState<string>();
+  const [type, setType] = React.useState<"edit" | "delete" | "send">("send");
   const { data: channel } = useGetChannelQuery(channelId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -40,7 +42,7 @@ export default function ChatWidget({ channelId }: Props) {
   };
 
   const formatDate = (timestamp: string) => {
-    return format(new Date(timestamp), "h:mm a MM/dd/yyyy"); // i need a more frendly date format
+    return format(new Date(timestamp), "h:mm a MM/dd/yyyy");
   };
 
   useEffect(() => {
@@ -69,19 +71,57 @@ export default function ChatWidget({ channelId }: Props) {
       },
       onMessage: (event) => {
         const data = JSON.parse(event.data);
-        setNewMessages([...newMessages, data.new_message]);
+        if (data.type === "send") {
+          setNewMessages([...newMessages, data.new_message]);
+        }
+        if (data.type !== "send") {
+          setNewMessages((prevMessages) =>
+            prevMessages.map((msg) =>
+              msg.id === data.new_message.id ? data.new_message : msg,
+            ),
+          );
+        }
       },
     },
   );
 
   const sendMessage = () => {
-    sendJsonMessage({ type: "message", message });
+    if (type === "edit") {
+      sendJsonMessage({
+        type,
+        message: {
+          id: messageId,
+          content: message,
+        },
+      });
+    }
+    if (type === "send") {
+      sendJsonMessage({ type, message });
+    }
+    if (type === "delete") {
+      sendJsonMessage({ type, message: messageId });
+    }
+    setType("send");
     setMessage("");
+  };
+
+  const handleEdit = (message_id: string, type: "edit" | "delete") => {
+    setType(type);
+    console.log(type);
+    const message = newMessages.find((message) => message.id === message_id);
+    setMessageId(message_id);
+    if (type === "edit") {
+      setMessage(message?.content ?? "");
+    }
+  };
+
+  const handleDelete = (message_id: string) => {
+    setMessageId(message_id);
+    sendJsonMessage({ type: "delete", message: message_id });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
-      // i want to check if the message is empty
       if (message.trim() === "") {
         event.preventDefault();
         return;
@@ -94,6 +134,8 @@ export default function ChatWidget({ channelId }: Props) {
   if (!channel) {
     return <div>Not found</div>;
   }
+
+  console.log(newMessages);
 
   return (
     <div className="flex h-full flex-col justify-between overflow-hidden dark:bg-muted/20">
@@ -128,32 +170,62 @@ export default function ChatWidget({ channelId }: Props) {
               <UserAvatar name={message.sender} className="h-9 w-9" />
               <p className="text-sm font-semibold">{message.sender}</p>
             </div>
-            <p className="ml-2 text-sm">{message.content}</p>
-            <div className="absolute right-0 top-0 hidden items-center gap-2 group-hover:flex">
-              <p className="mr-2 hidden text-xs italic group-hover:block">
-                {formatDate(message.created)}
+            {message.deleted === true ? (
+              <p className="ml-2 text-xs italic text-zinc-400">
+                this message has been deleted
               </p>
-              <Button size={`icon`} variant={`secondary`}>
-                <Pencil className="h-4 w-4" />
-              </Button>
-              <Button size={`icon`} variant={`destructive`}>
-                <Trash className="h-4 w-4" />
-              </Button>
-            </div>
+            ) : (
+              <>
+                <p className="ml-2 text-sm">{message.content}</p>
+                <div className="absolute right-0 top-0 hidden items-center gap-2 group-hover:flex">
+                  <p className="mr-2 hidden text-xs italic group-hover:block">
+                    {formatDate(message.created)}
+                  </p>
+                  <Button
+                    size={`icon`}
+                    variant={`secondary`}
+                    onClick={() => handleEdit(message.id, "edit")}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size={`icon`}
+                    variant={`destructive`}
+                    onClick={() => handleDelete(message.id)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
       <div className="relative flex flex-shrink-0 gap-4 py-4 pl-6 pr-[72px]">
-        <Textarea
-          ref={textareaRef}
-          id="message"
-          placeholder="Type your message here..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="max-h-24 min-h-[40px] resize-none overflow-y-auto"
-          rows={1}
-          onKeyDown={handleKeyDown}
-        />
+        <div className="flex w-full flex-col">
+          {type === "edit" && (
+            <div className="flex h-[16px] w-full -skew-x-12 items-center justify-between rounded-md bg-zinc-700 px-4">
+              <p className="text-xs italic">Editing</p>
+              <X
+                className="h-4 w-4 cursor-pointer"
+                onClick={() => {
+                  setType("send");
+                  setMessage("");
+                }}
+              />
+            </div>
+          )}
+          <Textarea
+            ref={textareaRef}
+            id="message"
+            placeholder="Type your message here..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="max-h-24 min-h-[40px] resize-none overflow-y-auto"
+            rows={1}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
         <Button
           onClick={sendMessage}
           className={cn("absolute bottom-[18px] right-4")}

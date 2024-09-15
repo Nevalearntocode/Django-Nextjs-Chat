@@ -14,7 +14,7 @@ export const useVerify = () => {
     verify()
       .unwrap()
       .then((res) => {
-        dispatch(setLogin(res.access));
+        dispatch(setLogin(null));
       })
       .catch(() => {
         dispatch(setLogout());

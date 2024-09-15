@@ -22,7 +22,9 @@ type Props = {};
 
 export default function Navbar({}: Props) {
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, accessToken } = useAppSelector(
+    (state) => state.auth,
+  );
   const [logout] = useLogoutMutation();
 
   const handleLogout = () => {

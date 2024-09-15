@@ -61,7 +61,7 @@ const LoginModal = (props: Props) => {
     login(data)
       .unwrap()
       .then((res) => {
-        dispatch(setLogin(res.access));
+        dispatch(setLogin(null));
       })
       .catch((err) => {
         console.log(err);

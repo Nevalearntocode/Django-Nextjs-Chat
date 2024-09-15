@@ -1,12 +1,12 @@
 import { baseApi } from "../base-api";
 
 export type Message = {
-  id: number;
+  id: string;
   sender: string;
   content: string;
   created: string;
   edited: string;
-  deleted: string;
+  deleted: boolean;
 };
 
 export type MessageQueryParams = {

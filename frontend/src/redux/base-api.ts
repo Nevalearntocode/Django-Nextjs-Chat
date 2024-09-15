@@ -29,13 +29,16 @@ const baseQueryWithReauth: BaseQueryFn<
       const release = await mutex.acquire();
       try {
         const refreshResult = await baseQuery(
-          "/api/jwt/refresh/",
+          {
+            url: "/api/jwt/refresh/",
+            method: "POST",
+          },
           api,
           extraOptions,
         );
         if (refreshResult.data) {
           // @ts-ignore
-          api.dispatch(setLogin(refreshResult.data.access));
+          api.dispatch(setLogin(null));
           result = await baseQuery(args, api, extraOptions);
         } else {
           api.dispatch(setLogout());
