@@ -13,6 +13,8 @@ import { Textarea } from "./ui/textarea";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useAppDispatch } from "@/redux/hooks";
+import { openModal, setDeleteMessageId } from "@/redux/features/modal-slice";
 
 type Props = {
   channelId: string;
@@ -27,6 +29,7 @@ export default function ChatWidget({ channelId }: Props) {
   const { data: channel } = useGetChannelQuery(channelId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
 
   const scrollToBottom = useCallback(() => {
     if (scrollRef.current) {
@@ -135,8 +138,6 @@ export default function ChatWidget({ channelId }: Props) {
     return <div>Not found</div>;
   }
 
-  console.log(newMessages);
-
   return (
     <div className="flex h-full flex-col justify-between overflow-hidden dark:bg-muted/20">
       <div className="h-full flex-1">
@@ -191,7 +192,10 @@ export default function ChatWidget({ channelId }: Props) {
                   <Button
                     size={`icon`}
                     variant={`destructive`}
-                    onClick={() => handleDelete(message.id)}
+                    onClick={() => {
+                      dispatch(openModal("delete-message"));
+                      dispatch(setDeleteMessageId(message.id));
+                    }}
                   >
                     <Trash className="h-4 w-4" />
                   </Button>
