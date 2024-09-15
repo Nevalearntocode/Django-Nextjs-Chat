@@ -9,6 +9,7 @@ from server.views import ServerViewSet
 from channel.views import ChannelViewSet
 from chat.views import MessageViewSet
 from chat.consumers import ChatConsumer
+from account.views import AccountViewSet
 
 router = DefaultRouter()
 
@@ -16,6 +17,7 @@ router.register("categories", CategoryViewSet)
 router.register("servers", ServerViewSet)
 router.register("channels", ChannelViewSet)
 router.register("messages", MessageViewSet)
+router.register("accounts", AccountViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
