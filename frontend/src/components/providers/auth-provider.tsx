@@ -2,7 +2,7 @@
 
 import { useVerify } from "@/hooks/use-verify";
 
-export default function AuthProvider() {
+export function AuthProvider() {
   useVerify();
 
   return <></>;

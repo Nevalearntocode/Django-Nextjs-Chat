@@ -9,7 +9,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ["id", "username", "email", "password", "repassword", "url"]
+        fields = ["id", "username", "password", "repassword", "url"]
 
     def validate(self, attrs):
         password = attrs.get("password")
@@ -22,14 +22,32 @@ class AccountSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        email = validated_data.get("email")
-        account = Account.objects.filter(email=email)
-        if account.exists():
-            raise serializers.ValidationError({"email": "Email already exists."})
         account = Account.objects.create(
             username=validated_data["username"],
-            email=validated_data["email"],
         )
         account.set_password(validated_data["password"])
         account.save()
         return account
+
+
+class AccountDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ["id", "username", "first_name", "last_name"]
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        user = self.context["request"].user
+        if not user.check_password(attrs["old_password"]):
+            raise serializers.ValidationError({"old_password": "Incorrect password."})
+        return attrs
+
+    def save(self, **kwargs):
+        user = self.context["request"].user
+        user.set_password(self.validated_data["new_password"])
+        user.save()
+        return user

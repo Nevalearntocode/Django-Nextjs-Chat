@@ -8,16 +8,48 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from account.serializers import AccountSerializer
+from account.serializers import (
+    AccountSerializer,
+    AccountDetailSerializer,
+    ChangePasswordSerializer,
+)
 from account.models import Account
 from account.permissions import AccountPermission
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from django.contrib.auth import update_session_auth_hash
 
 
 class AccountViewSet(ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     permission_classes = [AccountPermission]
+    
+    @action(detail=False, methods=["PUT"], serializer_class=ChangePasswordSerializer)
+    def change_password(self, request):
+        serializer = ChangePasswordSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        update_session_auth_hash(request, request.user)
+        return Response(
+            {"detail": "Password changed successfully."}, status=status.HTTP_200_OK
+        )
+
+    @action(detail=False, methods=["GET", "PUT", "PATCH"])
+    def me(self, request):
+        self.kwargs["pk"] = request.user.pk
+        if request.method == "GET":
+            return self.retrieve(request)
+        elif request.method == "PUT":
+            return self.update(request)
+        elif request.method == "PATCH":
+            return self.partial_update(request)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = AccountDetailSerializer
+        return super().retrieve(request, *args, **kwargs)
 
 
 class LogoutView(APIView):

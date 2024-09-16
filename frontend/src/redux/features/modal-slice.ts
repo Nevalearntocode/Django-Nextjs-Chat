@@ -8,6 +8,7 @@ type ModalState = {
     | "login"
     | "register"
     | "delete-message"
+    | "change-password"
     | null;
   deleteMessageId: string | null;
 };
@@ -30,7 +31,10 @@ const modalSlice = createSlice({
       state.isOpen = false;
       state.type = null;
     },
-    setDeleteMessageId: (state, action: { payload: ModalState["deleteMessageId"] }) => {
+    setDeleteMessageId: (
+      state,
+      action: { payload: ModalState["deleteMessageId"] },
+    ) => {
       state.deleteMessageId = action.payload;
     },
     clearDeleteMessageId: (state) => {
@@ -39,6 +43,10 @@ const modalSlice = createSlice({
   },
 });
 
-export const { openModal, closeModal, setDeleteMessageId, clearDeleteMessageId } =
-  modalSlice.actions;
+export const {
+  openModal,
+  closeModal,
+  setDeleteMessageId,
+  clearDeleteMessageId,
+} = modalSlice.actions;
 export default modalSlice.reducer;

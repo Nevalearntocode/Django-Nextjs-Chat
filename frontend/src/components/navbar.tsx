@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Key, LogOut, UserCircle } from "lucide-react";
+import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
 import { useLogoutMutation } from "@/redux/features/account-slice";
 import { setIsloading, setLogout } from "@/redux/features/auth-slice";
 
@@ -22,9 +22,7 @@ type Props = {};
 
 export default function Navbar({}: Props) {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, accessToken } = useAppSelector(
-    (state) => state.auth,
-  );
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
 
   const handleLogout = () => {
@@ -48,6 +46,12 @@ export default function Navbar({}: Props) {
         <>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={() => dispatch(openModal("change-password"))}
+          >
+            Password
+            <RectangleEllipsis className="ml-auto h-4 w-4" />
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={handleLogout}>
             Logout
             <LogOut className="ml-auto h-4 w-4" />

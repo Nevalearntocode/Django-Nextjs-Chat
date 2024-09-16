@@ -6,10 +6,29 @@ export const accountSlice = baseApi.injectEndpoints({
       { access: string; refresh: string },
       { username: string; password: string }
     >({
-      query: (credentials) => ({
+      query: (args) => ({
         url: "/api/jwt/create/",
         method: "POST",
-        body: credentials,
+        body: args,
+      }),
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: "/api/jwt/logout/",
+        method: "POST",
+      }),
+    }),
+    changePassword: builder.mutation<
+      void,
+      { oldPassword: string; newPassword: string }
+    >({
+      query: (args) => ({
+        url: "/api/accounts/change_password/",
+        method: "PUT",
+        body: {
+          old_password: args.oldPassword,
+          new_password: args.newPassword,
+        },
       }),
     }),
     refresh: builder.mutation<{ access: string }, void>({
@@ -24,18 +43,13 @@ export const accountSlice = baseApi.injectEndpoints({
         method: "POST",
       }),
     }),
-    logout: builder.mutation<void, void>({
-      query: () => ({
-        url: "/api/jwt/logout/",
-        method: "POST",
-      }),
-    }),
   }),
 });
 
 export const {
   useLoginMutation,
+  useLogoutMutation,
+  useChangePasswordMutation,
   useRefreshMutation,
   useVerifyMutation,
-  useLogoutMutation,
 } = accountSlice;
