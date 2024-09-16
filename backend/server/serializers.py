@@ -22,8 +22,9 @@ class ChannelSerializer(serializers.ModelSerializer):
 class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     url = serializers.HyperlinkedIdentityField(view_name="server-detail")
     owner = serializers.ReadOnlyField(source="owner.username")
+    invite_code = serializers.ReadOnlyField()
     channels = serializers.SerializerMethodField(read_only=True)
-    members = serializers.SerializerMethodField(read_only=True)
+    amount_members = serializers.SerializerMethodField(read_only=True)
     banner = serializers.ReadOnlyField()
     icon = serializers.ReadOnlyField()
     banner_file = FileFieldWithoutValidation(write_only=True)
@@ -31,7 +32,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
 
     class Meta:
         model = Server
-        fields = "__all__"
+        exclude = ["members"]
 
     def validate(self, attrs):
         icon_url = self.validate_and_process_image("icon_file")
@@ -48,7 +49,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     def get_channels(self, obj):
         return ChannelSerializer(obj.channel_server.all(), many=True).data
 
-    def get_members(self, obj):
+    def get_amount_members(self, obj):
         return obj.members.count()
 
     def update(self, instance, validated_data):
@@ -88,3 +89,9 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
             )
 
         return data
+
+
+class AddToServerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Server
+        fields = ["members"]

@@ -1,12 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
 from channel.models import Channel
 from channel.serializers import ChannelSerializer
+from channel.permissions import ChannelPermission
 from drf_spectacular.utils import extend_schema
 
 
 class ChannelViewSet(ModelViewSet):
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
+    permission_classes = [ChannelPermission]
     
     def get_queryset(self):
         request = self.request
