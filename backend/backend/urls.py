@@ -13,11 +13,11 @@ from account.views import AccountViewSet
 
 router = DefaultRouter()
 
+router.register("accounts", AccountViewSet)
 router.register("categories", CategoryViewSet)
 router.register("servers", ServerViewSet)
 router.register("channels", ChannelViewSet)
 router.register("messages", MessageViewSet)
-router.register("accounts", AccountViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

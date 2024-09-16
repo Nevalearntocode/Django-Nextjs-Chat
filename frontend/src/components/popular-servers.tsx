@@ -49,7 +49,9 @@ export default function PopularServers({}: Props) {
                 <UserAvatar name={server.name} />
                 <div className={cn("flex flex-col")}>
                   <p className="text-lg font-semibold">{server.name}</p>
-                  <p className="text-sm font-light">{server.description}</p>
+                  <p className="line-clamp-1 text-sm font-light">
+                    {server.description}
+                  </p>
                 </div>
               </div>
             </div>

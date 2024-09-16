@@ -67,7 +67,7 @@ export default function PrimaryDraw({}: Props) {
                 router.push(`/servers/${server.id}`);
               }}
             >
-              <UserAvatar name={server.name} image={server.banner} />
+              <UserAvatar name={server.name} image={server.icon} />
               <div
                 className={cn("hidden flex-col", open ? "lg:flex" : "hidden")}
               >

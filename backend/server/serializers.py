@@ -24,29 +24,26 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     owner = serializers.ReadOnlyField(source="owner.username")
     channels = serializers.SerializerMethodField(read_only=True)
     members = serializers.SerializerMethodField(read_only=True)
-    banner = FileFieldWithoutValidation()
-    icon = FileFieldWithoutValidation()
+    banner = serializers.ReadOnlyField()
+    icon = serializers.ReadOnlyField()
+    banner_file = FileFieldWithoutValidation(write_only=True)
+    icon_file = FileFieldWithoutValidation(write_only=True)
 
     class Meta:
         model = Server
         fields = "__all__"
 
     def validate(self, attrs):
-        attrs["icon"] = self.validate_and_process_image("icon")
-        attrs["banner"] = self.validate_and_process_image("banner")
-        return super().validate(attrs)
+        icon_url = self.validate_and_process_image("icon_file")
+        banner_url = self.validate_and_process_image("banner_file")
+        if icon_url:
+            attrs["icon"] = icon_url
+        if banner_url:
+            attrs["banner"] = banner_url
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        if not data["banner"]:
-            data["banner"] = (
-                f"{settings.WEBSITE_URL}/media/server/server-banner-{get_one_or_two()}.jpg"
-            )
-        if not data["icon"]:
-            data["icon"] = (
-                f"{settings.WEBSITE_URL}/media/server/default-server-icon.png"
-            )
-        return data
+        attrs.pop("banner_file")
+        attrs.pop("icon_file")
+        return attrs
 
     def get_channels(self, obj):
         return ChannelSerializer(obj.channel_server.all(), many=True).data
@@ -68,9 +65,26 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
         return super().update(instance, validated_data)
 
     def delete(self, instance):
-        banner_url = instance.banner
         icon_url = instance.icon
-        self.delete_image(icon_url)
-        self.delete_image(banner_url)
+        banner_url = instance.banner
+        if icon_url:
+            self.delete_image(icon_url)
+        if banner_url:
+            self.delete_image(banner_url)
         instance.delete()
         return instance
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        if not data.get("banner"):
+            data["banner"] = (
+                f"{settings.WEBSITE_URL}/media/server/server-banner-{get_one_or_two()}.jpg"
+            )
+
+        if not data.get("icon"):
+            data["icon"] = (
+                f"{settings.WEBSITE_URL}/media/server/default-server-icon.png"
+            )
+
+        return data
