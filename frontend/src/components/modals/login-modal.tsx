@@ -27,6 +27,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal, openModal } from "@/redux/features/modal-slice";
 import { useLoginMutation } from "@/redux/features/account-slice";
 import { setLogin } from "@/redux/features/auth-slice";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -57,14 +58,32 @@ const LoginModal = (props: Props) => {
 
   const isLoading = form.formState.isSubmitting;
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      form.handleSubmit(onSubmit)();
+    }
+  };
+
   const onSubmit = (data: FormType) => {
     login(data)
       .unwrap()
       .then((res) => {
         dispatch(setLogin(null));
+        dispatch(closeModal());
+        form.reset();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: any) => {
+        if (err.data) {
+          for (const field in err.data) {
+            err.data[field].forEach((errorMessage: string) => {
+              toast.error(errorMessage);
+            });
+          }
+        } else {
+          console.error(err);
+          toast.error("An error occurred during registration");
+        }
       });
   };
 
@@ -82,6 +101,7 @@ const LoginModal = (props: Props) => {
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col gap-2"
+              onKeyDown={handleKeyDown}
             >
               <FormField
                 control={form.control}
@@ -110,9 +130,10 @@ const LoginModal = (props: Props) => {
                 )}
               />
 
-              <div className="mt-4 flex w-full justify-end">
+              <div className="mt-4 flex w-full justify-end gap-4">
                 <Button
                   variant={`link`}
+                  disabled={isLoading}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

@@ -1,7 +1,18 @@
+import { register } from "module";
 import { baseApi } from "../base-api";
 
 export const accountSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    register: builder.mutation<
+      void,
+      { username: string; password: string; repassword: string }
+    >({
+      query: (args) => ({
+        url: "/api/accounts/",
+        method: "POST",
+        body: args,
+      }),
+    }),
     login: builder.mutation<
       { access: string; refresh: string },
       { username: string; password: string }
@@ -47,6 +58,7 @@ export const accountSlice = baseApi.injectEndpoints({
 });
 
 export const {
+  useRegisterMutation,
   useLoginMutation,
   useLogoutMutation,
   useChangePasswordMutation,

@@ -25,6 +25,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal, openModal } from "@/redux/features/modal-slice";
+import {
+  useLoginMutation,
+  useRegisterMutation,
+} from "@/redux/features/account-slice";
+import { toast } from "sonner";
+import { setLogin } from "@/redux/features/auth-slice";
 
 type Props = {};
 
@@ -32,10 +38,6 @@ const formSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
   password: z.string().min(1, { message: "Password is required" }),
   repassword: z.string().min(1, { message: "Re-Password is required" }),
-  email: z
-    .string()
-    .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email" }),
 });
 
 type FormType = z.infer<typeof formSchema>;
@@ -44,6 +46,8 @@ const RegisterModal = (props: Props) => {
   const dispatch = useAppDispatch();
   const { isOpen, type } = useAppSelector((state) => state.modal);
   const isModalOpen = isOpen && type === "register";
+  const [register] = useRegisterMutation();
+  const [login] = useLoginMutation();
 
   const onClose = () => {
     dispatch(closeModal());
@@ -55,14 +59,56 @@ const RegisterModal = (props: Props) => {
       username: "",
       password: "",
       repassword: "",
-      email: "",
     },
   });
 
   const isLoading = form.formState.isSubmitting;
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === "Enter") {
+      form.handleSubmit(onSubmit)();
+    }
+  };
+
   const onSubmit = async (data: FormType) => {
-    console.log(data);
+    const password = data.password;
+    const repassword = data.repassword;
+    if (password !== repassword) {
+      toast.error("Passwords do not match");
+    }
+
+    register(data)
+      .unwrap()
+      .then((res) => {
+        dispatch(closeModal());
+        form.reset();
+        toast.success("Account created successfully");
+
+        login({
+          username: data.username,
+          password: data.password,
+        })
+          .unwrap()
+          .then((res) => {
+            dispatch(setLogin(null));
+          })
+          .catch((err) => {
+            console.log(err);
+            toast.error("Something went wrong");
+          });
+      })
+      .catch((err: any) => {
+        if (err.data) {
+          for (const field in err.data) {
+            err.data[field].forEach((errorMessage: string) => {
+              toast.error(errorMessage);
+            });
+          }
+        } else {
+          console.error(err);
+          toast.error("An error occurred during registration");
+        }
+      });
   };
 
   return (
@@ -79,6 +125,7 @@ const RegisterModal = (props: Props) => {
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col gap-2"
+              onKeyDown={handleKeyDown}
             >
               <FormField
                 control={form.control}
@@ -88,19 +135,6 @@ const RegisterModal = (props: Props) => {
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input placeholder="Username" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="johndoe@example" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -133,7 +167,7 @@ const RegisterModal = (props: Props) => {
                 )}
               />
 
-              <div className="mt-4 flex w-full justify-end">
+              <div className="mt-4 flex w-full justify-end gap-4">
                 <Button
                   variant={`link`}
                   onClick={(e) => {
