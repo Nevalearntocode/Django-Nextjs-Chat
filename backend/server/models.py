@@ -1,11 +1,6 @@
-import random
 from django.db import models
 from django.conf import settings
 from category.models import Category
-
-
-def get_one_or_two():
-    return random.choice([1, 2])
 
 
 class Server(models.Model):
@@ -25,11 +20,3 @@ class Server(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        if self.banner == "":
-            self.banner = f"{settings.WEBSITE_URL}/media/server/server-banner-{get_one_or_two()}.jpg"
-        if self.icon == "":
-            self.icon = f"{settings.WEBSITE_URL}/media/server/default-server-icon.png"
-        super().save(*args, **kwargs)

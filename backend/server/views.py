@@ -40,3 +40,7 @@ class ServerViewSet(ModelViewSet):
     @list_server_docs
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        return super().perform_create(serializer)
