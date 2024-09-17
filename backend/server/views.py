@@ -2,14 +2,20 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
 from server.models import Server
-from server.serializers import ServerSerializer, AddToServerSerializer
+from server.serializers import (
+    ServerSerializer,
+    ServerActionSerializer,
+    ServerMemberActionSerializer,
+)
 from server.schema import list_server_docs
 from server.permissions import ServerPermission
+from server.mixins import AdditionalMixins
 from rest_framework.decorators import action
 
 
-class ServerViewSet(ModelViewSet):
+class ServerViewSet(ModelViewSet, AdditionalMixins):
     queryset = Server.objects.all()
     serializer_class = ServerSerializer
     permission_classes = [ServerPermission]
@@ -22,7 +28,7 @@ class ServerViewSet(ModelViewSet):
         by_user = request.query_params.get("by_user", None)
 
         if category is not None and category != "":
-            queryset = queryset.filter(category__name=category)
+            queryset = queryset.filter(category__name__icontains=category)
 
         if by_user is not None and by_user.lower() == "true":
             if request.user.is_authenticated:
@@ -55,38 +61,56 @@ class ServerViewSet(ModelViewSet):
         serializer.delete(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=["POST"], serializer_class=AddToServerSerializer)
+    @action(
+        detail=True,
+        methods=["POST"],
+        serializer_class=ServerMemberActionSerializer,
+    )
+    def kick(self, request, pk=None, *args, **kwargs):
+        return self.perform_kick_or_ban_or_unban(request, "kick", "kicked")
+
+    @action(
+        detail=True,
+        methods=["POST"],
+        serializer_class=ServerMemberActionSerializer,
+    )
+    def ban(self, request, pk=None, *args, **kwargs):
+        return self.perform_kick_or_ban_or_unban(request, "ban", "banned")
+
+    @action(
+        detail=True,
+        methods=["POST"],
+        serializer_class=ServerMemberActionSerializer,
+    )
+    def unban(self, request, pk=None, *args, **kwargs):
+        return self.perform_kick_or_ban_or_unban(request, "unban", "unbanned")
+
+    @action(
+        detail=True,
+        methods=["POST"],
+        serializer_class=ServerActionSerializer,
+        permission_classes=[IsAuthenticated],
+    )
     def join(self, request, pk=None, *args, **kwargs):
-        instance = self.get_object()
-        members = request.data.get("members")
-        instance.members.add(*members)
-        instance.save()
-        return Response(
-            {"detail": "Successfully joined the server."}, status=status.HTTP_200_OK
+        return self.perform_join_or_leave(request, "join", "joined")
+
+    @action(
+        detail=True,
+        methods=["POST"],
+        serializer_class=ServerActionSerializer,
+        permission_classes=[IsAuthenticated],
+    )
+    def leave(self, request, pk=None, *args, **kwargs):
+        return self.perform_join_or_leave(request, "leave", "left")
+
+    @action(detail=True, methods=["POST"], serializer_class=ServerActionSerializer)
+    def roll_invite_code(self, request, pk=None, *args, **kwargs):
+        return self.perform_roll_invite_code_or_toggle_status(
+            request, "roll_invite_code", "Rolled the invite code."
         )
 
-    @action(detail=True, methods=["POST"], serializer_class=AddToServerSerializer)
-    def leave(self, request, pk=None, *args, **kwargs):
-        instance = self.get_object()
-        members = request.data.get("members", [])
-
-        # Filter out the owner to prevent them from being removed
-        if str(instance.owner.id) in members:
-            return Response(
-                {"detail": "You cannot remove owner from the server."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if not members:
-            return Response(
-                {"detail": "No valid members to remove."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Remove the members from the server
-        instance.members.remove(*members)
-        instance.save()
-
-        return Response(
-            {"detail": "Successfully left the server."}, status=status.HTTP_200_OK
+    @action(detail=True, methods=["POST"], serializer_class=ServerActionSerializer)
+    def toggle_status(self, request, pk=None, *args, **kwargs):
+        return self.perform_roll_invite_code_or_toggle_status(
+            request, "toggle_status", "Toggled the server status."
         )

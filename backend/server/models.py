@@ -22,6 +22,9 @@ class Server(models.Model):
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="server_members"
     )
+    banned = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="server_banned", blank=True
+    )
     description = models.TextField(null=True, blank=True, max_length=1000)
     status = models.CharField(choices=status, default="private", max_length=255)
     invite_code = models.UUIDField(default=uuid.uuid4)

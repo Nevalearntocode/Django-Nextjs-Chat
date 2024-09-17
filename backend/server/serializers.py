@@ -7,6 +7,10 @@ from backend.serializers import (
     ImageSerializerMixin,
 )
 from django.conf import settings
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 def get_one_or_two():
@@ -32,7 +36,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
 
     class Meta:
         model = Server
-        exclude = ["members"]
+        fields = "__all__"
 
     def validate(self, attrs):
         icon_url = self.validate_and_process_image("icon_file")
@@ -76,6 +80,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
         return instance
 
     def to_representation(self, instance):
+        user = self.context.get("request").user
         data = super().to_representation(instance)
 
         if not data.get("banner"):
@@ -88,10 +93,19 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
                 f"{settings.WEBSITE_URL}/media/server/default-server-icon.png"
             )
 
+        if not data["owner"] == user.username:
+            data["banned"] = None
+
+        if not user.id in data["members"]:
+            data["invite_code"] = None
+            data["members"] = None
+
         return data
 
 
-class AddToServerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Server
-        fields = ["members"]
+class ServerActionSerializer(serializers.Serializer):
+    pass
+
+
+class ServerMemberActionSerializer(serializers.Serializer):
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
