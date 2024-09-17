@@ -1,0 +1,47 @@
+# Python Compiled Files
+*.pyc
+__pycache__/
+*.pyo
+
+# Django Static and Media
+static/
+media/
+
+# Development Environment
+.venv/
+venv/
+env/
+
+# Testing Artifacts
+.pytest_cache/
+htmlcov/
+.coverage
+
+# IDE/Editor Files
+.idea/
+.vscode/
+*.iml
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Git Data
+.git/
+
+# Docker Artifacts
+Dockerfile.dev*
+docker-compose.*
+
+# Secrets and Sensitive Data
+.env
+*.key
+*.cert
+
+# Optional: Exclude specific dependencies
+# Only uncomment if you're managing them outside Docker
+# requirements/*.txt
+
+# Ignore build directory
+build/
+celerybeat-schedule

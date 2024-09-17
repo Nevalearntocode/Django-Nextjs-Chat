@@ -20,7 +20,7 @@ def get_one_or_two():
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
-        exclude = ["members", "server"]
+        fields = "__all__"
 
 
 class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
@@ -33,6 +33,8 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     icon = serializers.ReadOnlyField()
     banner_file = FileFieldWithoutValidation(write_only=True)
     icon_file = FileFieldWithoutValidation(write_only=True)
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    banned = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Server

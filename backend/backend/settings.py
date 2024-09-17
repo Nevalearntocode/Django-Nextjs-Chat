@@ -95,10 +95,18 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "test": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
+    "default": {
+        "ENGINE": getenv("SQL_ENGINE"),
+        "NAME": getenv("SQL_DATABASE"),
+        "USER": getenv("DOCKER_SQL_USER"),
+        "PASSWORD": getenv("DOCKER_SQL_PASSWORD"),
+        "HOST": getenv("DOCKER_SQL_HOST"),
+        "PORT": getenv("DOCKER_SQL_PORT"),
+    },
 }
 
 
@@ -175,7 +183,14 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": True,
 }
 
-CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
 
 CLOUDFLARE_R2_ACCESS_KEY_ID = getenv("CLOUDFLARE_R2_ACCESS_KEY_ID")
 CLOUDFLARE_R2_SECRET_ACCESS_KEY = getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
