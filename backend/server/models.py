@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from category.models import Category
 
+
 status = (
     ("public", "Public"),
     ("private", "Private"),

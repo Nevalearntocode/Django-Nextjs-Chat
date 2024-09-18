@@ -1,7 +1,6 @@
 import random
 from rest_framework import serializers
 from server.models import Server
-from channel.models import Channel
 from backend.serializers import (
     FileFieldWithoutValidation,
     ImageSerializerMixin,
@@ -17,17 +16,10 @@ def get_one_or_two():
     return random.choice([1, 2])
 
 
-class ChannelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Channel
-        fields = "__all__"
-
-
 class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     url = serializers.HyperlinkedIdentityField(view_name="server-detail")
     owner = serializers.ReadOnlyField(source="owner.username")
     invite_code = serializers.ReadOnlyField()
-    channels = serializers.SerializerMethodField(read_only=True)
     amount_members = serializers.SerializerMethodField(read_only=True)
     banner = serializers.ReadOnlyField()
     icon = serializers.ReadOnlyField()
@@ -51,9 +43,6 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
         attrs.pop("banner_file")
         attrs.pop("icon_file")
         return attrs
-
-    def get_channels(self, obj):
-        return ChannelSerializer(obj.channel_server.all(), many=True).data
 
     def get_amount_members(self, obj):
         return obj.members.count()
