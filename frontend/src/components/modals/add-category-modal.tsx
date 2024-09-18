@@ -27,22 +27,23 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal } from "@/redux/features/modal-slice";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../image-upload";
+import { useAddCategoryMutation } from "@/redux/features/category-slice";
+import { toast } from "sonner";
 
 type Props = {};
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string(),
-  icon: z.instanceof(File).nullable(),
+  icon_file: z.instanceof(File).nullable(),
 });
 
-type FormType = z.infer<typeof formSchema>;
+export type FormType = z.infer<typeof formSchema>;
 
 const AddCategoryModal = (props: Props) => {
   const { isOpen, type } = useAppSelector((state) => state.modal);
-
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+  const [addCategory] = useAddCategoryMutation();
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -59,7 +60,7 @@ const AddCategoryModal = (props: Props) => {
     defaultValues: {
       name: "",
       description: "",
-      icon: null,
+      icon_file: null,
     },
   });
 
@@ -73,8 +74,26 @@ const AddCategoryModal = (props: Props) => {
     dispatch(closeModal());
   };
 
-  const onSubmit = async (data: FormType) => {
-    console.log(data);
+  const onSubmit = (data: FormType) => {
+    addCategory(data)
+      .unwrap()
+      .then(() => {
+        form.reset();
+        onOpenChange();
+        toast.success("Category added successfully");
+      })
+      .catch((err: any) => {
+        if (err.data) {
+          for (const field in err.data) {
+            err.data[field].forEach((errorMessage: string) => {
+              toast.error(errorMessage);
+            });
+          }
+        } else {
+          console.error(err);
+          toast.error("An error occurred during registration");
+        }
+      });
   };
 
   return (
@@ -121,10 +140,10 @@ const AddCategoryModal = (props: Props) => {
             />
             <FormField
               control={form.control}
-              name="icon"
+              name="icon_file"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Icon</FormLabel>
+                  <FormLabel>Icon_file</FormLabel>
                   <FormControl>
                     <ImageUpload
                       onChange={field.onChange}

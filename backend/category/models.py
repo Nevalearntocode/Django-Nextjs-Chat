@@ -16,10 +16,3 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-    def save(self, *args, **kwargs):
-        if self.icon == "":
-            self.icon = (
-                f"{settings.WEBSITE_URL}/media/category/default-category-icon.png"
-            )
-        super().save(*args, **kwargs)

@@ -66,17 +66,12 @@ const RegisterModal = (props: Props) => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       form.handleSubmit(onSubmit)();
     }
   };
 
   const onSubmit = async (data: FormType) => {
-    const password = data.password;
-    const repassword = data.repassword;
-    if (password !== repassword) {
-      toast.error("Passwords do not match");
-    }
-
     register(data)
       .unwrap()
       .then((res) => {

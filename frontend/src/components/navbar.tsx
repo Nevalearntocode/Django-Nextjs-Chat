@@ -15,15 +15,19 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
-import { useLogoutMutation } from "@/redux/features/account-slice";
+import {
+  useGetCurrentUserQuery,
+  useLogoutMutation,
+} from "@/redux/features/account-slice";
 import { setIsloading, setLogout } from "@/redux/features/auth-slice";
 
 type Props = {};
 
 export default function Navbar({}: Props) {
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
+  const { data: user } = useGetCurrentUserQuery();
 
   const handleLogout = () => {
     dispatch(setIsloading(true));
@@ -52,7 +56,7 @@ export default function Navbar({}: Props) {
             Password
             <RectangleEllipsis className="ml-auto h-4 w-4" />
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={handleLogout}>
+          <DropdownMenuItem onSelect={handleLogout} disabled={isLoading}>
             Logout
             <LogOut className="ml-auto h-4 w-4" />
           </DropdownMenuItem>
@@ -88,7 +92,10 @@ export default function Navbar({}: Props) {
           <ModeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <UserAvatar name="Neva" image="/default-avatar-image.jpg" />
+              <UserAvatar
+                name={user?.username ?? "user"}
+                image={user ? undefined : `/default-avatar-image.jpg`}
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {renderDropdownMenuItems()}

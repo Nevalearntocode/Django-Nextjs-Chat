@@ -34,7 +34,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class AccountDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ["id", "username"]
+        fields = ["id", "username", "is_staff"]
 
 
 class ChangePasswordSerializer(serializers.Serializer):

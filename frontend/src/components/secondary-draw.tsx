@@ -11,12 +11,14 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useGetChannelsQuery } from "@/redux/features/channel-slice";
 import { UserAvatar } from "./user-avatar";
 import { setChannelName } from "@/redux/features/global-var-slice";
+import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
   const dispatch = useAppDispatch();
   const { data: categories } = useGetCategoriesQuery();
+  const { data: user } = useGetCurrentUserQuery();
   const router = useRouter();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
@@ -44,6 +46,8 @@ export default function SecondaryDraw({}: Props) {
     router.push(url.toString());
   };
 
+  console.log(user);
+
   return (
     <div
       className={cn(
@@ -54,14 +58,16 @@ export default function SecondaryDraw({}: Props) {
         <p className={cn("hidden text-lg font-bold md:block")}>
           {isServerRoute ? serverName : "Explore"}
         </p>{" "}
-        <Button
-          className="rounded-full"
-          size={"icon"}
-          variant={`outline`}
-          onClick={onAddCategory}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+        {user?.is_staff && (
+          <Button
+            className="rounded-full"
+            size={"icon"}
+            variant={`outline`}
+            onClick={onAddCategory}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        )}
       </div>
       {/* TODO: make this a separate component later */}
       <div className="mt-1 flex w-full flex-col gap-2 px-4 md:px-2">
