@@ -6,10 +6,11 @@ class AccountSerializer(serializers.ModelSerializer):
     repassword = serializers.CharField(write_only=True)
     password = serializers.CharField(write_only=True)
     url = serializers.HyperlinkedIdentityField(view_name="account-detail")
+    is_staff = serializers.ReadOnlyField()
 
     class Meta:
         model = Account
-        fields = ["id", "username", "password", "repassword", "url"]
+        fields = ["id", "username", "password", "repassword", "url", "is_staff"]
 
     def validate(self, attrs):
         password = attrs.get("password")
