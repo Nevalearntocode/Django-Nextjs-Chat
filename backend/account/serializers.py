@@ -35,6 +35,7 @@ class AccountDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ["id", "username", "is_staff"]
+        read_only_fields = ["is_staff"]
 
 
 class ChangePasswordSerializer(serializers.Serializer):

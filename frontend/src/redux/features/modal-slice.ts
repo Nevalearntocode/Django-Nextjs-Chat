@@ -9,6 +9,7 @@ type ModalState = {
     | "register"
     | "delete-message"
     | "change-password"
+    | "server"
     | null;
   deleteMessageId: string | null;
 };

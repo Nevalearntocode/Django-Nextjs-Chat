@@ -5,14 +5,17 @@ import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { UserAvatar } from "./user-avatar";
+import { cn } from "@/lib/utils";
 
 type Props = {
   onChange: (image: File | string) => void;
   onRemove: () => void;
   value: File | null;
+  type?: "image" | "icon";
 };
 
-const ImageUpload = ({ onChange, value, onRemove }: Props) => {
+const ImageUpload = ({ onChange, value, onRemove, type = "image" }: Props) => {
   const uploadImageRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +27,7 @@ const ImageUpload = ({ onChange, value, onRemove }: Props) => {
   return (
     <>
       {value ? (
-        <div className="relative flex aspect-video flex-col">
+        <div className="group relative flex aspect-video flex-col">
           {typeof value === "string" ? (
             <Image
               src={value}
@@ -35,17 +38,30 @@ const ImageUpload = ({ onChange, value, onRemove }: Props) => {
               priority={true}
             />
           ) : (
-            <Image
-              src={URL.createObjectURL(value)}
-              alt="Uploaded Image"
-              fill
-              sizes="( max-width: 768px ) 768px, ( max-width: 1200px ) 768px, 768px"
-              className="h-80 w-auto rounded-md"
-              priority={true}
-            />
+            <>
+              {type === "image" ? (
+                <Image
+                  src={URL.createObjectURL(value)}
+                  alt="Uploaded Image"
+                  fill
+                  sizes="( max-width: 768px ) 768px, ( max-width: 1200px ) 768px, 768px"
+                  className="h-80 w-auto rounded-md"
+                  priority={true}
+                />
+              ) : (
+                <UserAvatar
+                  name={value.name}
+                  image={URL.createObjectURL(value)}
+                  className="h-80 w-auto rounded-md"
+                />
+              )}
+            </>
           )}
           <Button
-            className="absolute -right-3 -top-3 m-0 h-6 w-6 rounded-full p-0"
+            className={cn(
+              "absolute -top-3 m-0 hidden h-6 w-6 rounded-full p-0 group-hover:flex",
+              type === "image" ? "-right-3" : "left-10",
+            )}
             size={`icon`}
             variant={`destructive`}
             onClick={(e) => {

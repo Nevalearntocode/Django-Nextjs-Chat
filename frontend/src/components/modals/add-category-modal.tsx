@@ -84,11 +84,7 @@ const AddCategoryModal = (props: Props) => {
       })
       .catch((err: any) => {
         if (err.data) {
-          for (const field in err.data) {
-            err.data[field].forEach((errorMessage: string) => {
-              toast.error(errorMessage);
-            });
-          }
+          toast.error(err.data.detail);
         } else {
           console.error(err);
           toast.error("An error occurred during registration");
@@ -143,7 +139,7 @@ const AddCategoryModal = (props: Props) => {
               name="icon_file"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Icon_file</FormLabel>
+                  <FormLabel>Icon</FormLabel>
                   <FormControl>
                     <ImageUpload
                       onChange={field.onChange}

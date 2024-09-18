@@ -94,7 +94,7 @@ export default function Navbar({}: Props) {
             <DropdownMenuTrigger>
               <UserAvatar
                 name={user?.username ?? "user"}
-                image={user ? undefined : `/default-avatar-image.jpg`}
+                image={user && isAuthenticated ? undefined : `/default-avatar-image.jpg`}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

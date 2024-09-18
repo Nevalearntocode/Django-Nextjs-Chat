@@ -67,7 +67,7 @@ export const accountSlice = baseApi.injectEndpoints({
         url: "/api/jwt/logout/",
         method: "POST",
       }),
-      invalidatesTags: [{ type: "users", id: "me" }],
+      invalidatesTags: ["users"],
     }),
     refresh: builder.mutation<{ access: string }, void>({
       query: () => ({

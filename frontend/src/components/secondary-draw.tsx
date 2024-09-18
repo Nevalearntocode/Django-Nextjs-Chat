@@ -24,6 +24,7 @@ export default function SecondaryDraw({}: Props) {
   const categoryParam = searchParams.get("category");
   const pathname = usePathname();
   const { serverName } = useAppSelector((state) => state.globalVar);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const isServerRoute =
     pathname.startsWith("/servers") || pathname.startsWith("/channels");
@@ -46,8 +47,6 @@ export default function SecondaryDraw({}: Props) {
     router.push(url.toString());
   };
 
-  console.log(user);
-
   return (
     <div
       className={cn(
@@ -58,7 +57,7 @@ export default function SecondaryDraw({}: Props) {
         <p className={cn("hidden text-lg font-bold md:block")}>
           {isServerRoute ? serverName : "Explore"}
         </p>{" "}
-        {user?.is_staff && (
+        {user?.is_staff && isAuthenticated && (
           <Button
             className="rounded-full"
             size={"icon"}

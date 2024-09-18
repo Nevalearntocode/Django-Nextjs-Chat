@@ -2,14 +2,16 @@
 
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "./user-avatar";
 import { useGetServersQuery } from "@/redux/features/server-slice";
 import { useRouter, useSearchParams } from "next/navigation";
 import ServerTooltip from "./sever-tooltip";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setServerName } from "@/redux/features/global-var-slice";
+import { openModal } from "@/redux/features/modal-slice";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -19,13 +21,23 @@ export default function PrimaryDraw({}: Props) {
   const category = searchParams.get("category");
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const { data } = useGetServersQuery({ category: category ?? undefined });
+
+  const onOpenAddServerModal = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal("login"));
+      toast.info("You need to be authenticated to create a server");
+      return;
+    }
+    dispatch(openModal("server"));
+  };
 
   return (
     <div
       className={cn(
-        "container relative mt-4 hidden h-full flex-shrink-0 flex-col overflow-auto transition-all duration-300 ease-in-out scrollbar-hide sm:flex",
+        "container relative mt-4 hidden h-full flex-shrink-0 flex-col justify-between overflow-auto transition-all duration-300 ease-in-out scrollbar-hide sm:flex",
         open ? "sm:w-[80px] md:w-[160px] lg:w-[240px]" : "w-[80px]",
       )}
     >
@@ -81,6 +93,15 @@ export default function PrimaryDraw({}: Props) {
             </div>
           </ServerTooltip>
         ))}
+      </div>
+      <div className="mb-10 flex w-full items-center justify-center">
+        <Button
+          className="rounded-full"
+          size={`${open ? "lg" : "default"}`}
+          onClick={onOpenAddServerModal}
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
