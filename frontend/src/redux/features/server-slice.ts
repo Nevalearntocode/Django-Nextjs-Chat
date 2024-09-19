@@ -10,6 +10,8 @@ type Server = {
   owner: string;
   banner: string;
   icon: string;
+  status: "private" | "public";
+  invite_code: string;
 };
 
 type ServerQueryParams = {
@@ -72,8 +74,19 @@ export const serverSlice = baseApi.injectEndpoints({
       },
       invalidatesTags: [{ type: "servers", id: "list" }],
     }),
+    rollInviteCode: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/servers/${id}/roll_invite_code/`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "servers", id }],
+    }),
   }),
 });
 
-export const { useGetServersQuery, useGetServerQuery, useAddServerMutation } =
-  serverSlice;
+export const {
+  useGetServersQuery,
+  useGetServerQuery,
+  useAddServerMutation,
+  useRollInviteCodeMutation,
+} = serverSlice;

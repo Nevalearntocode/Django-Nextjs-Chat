@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 type Props = {
   onChange: (image: File | string) => void;
   onRemove: () => void;
-  value: File | null;
+  value: string | File | null;
   type?: "image" | "icon";
 };
 
@@ -29,14 +29,24 @@ const ImageUpload = ({ onChange, value, onRemove, type = "image" }: Props) => {
       {value ? (
         <div className="group relative flex aspect-video flex-col">
           {typeof value === "string" ? (
-            <Image
-              src={value}
-              alt="Uploaded Image"
-              fill
-              sizes="( max-width: 768px ) 768px, ( max-width: 1200px ) 768px, 768px"
-              className="h-80 w-auto rounded-md"
-              priority={true}
-            />
+            <>
+              {type === "image" ? (
+                <Image
+                  src={value}
+                  alt="Uploaded Image"
+                  fill
+                  sizes="( max-width: 768px ) 768px, ( max-width: 1200px ) 768px, 768px"
+                  className="h-80 w-auto rounded-md"
+                  priority={true}
+                />
+              ) : (
+                <UserAvatar
+                  name={value}
+                  image={value}
+                  className="h-80 w-auto rounded-md"
+                />
+              )}
+            </>
           ) : (
             <>
               {type === "image" ? (

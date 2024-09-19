@@ -25,53 +25,47 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal } from "@/redux/features/modal-slice";
-import { useGetCategoriesQuery } from "@/redux/features/category-slice";
-import { Textarea } from "../ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "../ui/command";
+  useGetServerQuery,
+  useRollInviteCodeMutation,
+} from "@/redux/features/server-slice";
+import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
 import ImageUpload from "../image-upload";
-import { useAddServerMutation } from "@/redux/features/server-slice";
+import { Copy, RefreshCcw } from "lucide-react";
+import { env } from "@/env";
 import { toast } from "sonner";
 
 type Props = {};
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Title is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
   description: z.string(),
   status: z.enum(["public", "private"]),
-  icon_file: z.instanceof(File).nullable(),
-  banner_file: z.instanceof(File).nullable(),
+  icon_file: z.union([z.instanceof(File), z.string()]).nullable(),
+  banner_file: z.union([z.instanceof(File), z.string()]).nullable(),
   category: z.string().min(1, { message: "Category is required" }),
+  invite_code: z.string(),
 });
 
-export type ServerFormType = z.infer<typeof formSchema>;
+type FormType = z.infer<typeof formSchema>;
 
-const AddServerModal = (props: Props) => {
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const { data: categories } = useGetCategoriesQuery({});
-  const isModalOpen = isOpen && type === "server";
+const ServerSettingsModal = (props: Props) => {
   const dispatch = useAppDispatch();
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const [addServer] = useAddServerMutation();
+  const { isOpen, type } = useAppSelector((state) => state.modal);
+  const isModalOpen = isOpen && type === "server-settings";
+  const pathname = usePathname();
+  const serverId = pathname.split("/")[2];
+  const { data: server } = useGetServerQuery(serverId);
+  const [rollInviteCode, { isLoading: isRerollLoading }] =
+    useRollInviteCodeMutation();
 
-  const adjustHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
+  const onOpenChange = () => {
+    dispatch(closeModal());
   };
 
-  const form = useForm<ServerFormType>({
+  const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -80,29 +74,38 @@ const AddServerModal = (props: Props) => {
       icon_file: null,
       banner_file: null,
       category: "",
+      invite_code: "",
     },
   });
 
   useEffect(() => {
-    adjustHeight();
-  }, [form.watch("description")]);
-
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("description", server.description);
+      form.setValue("status", server.status);
+      form.setValue("icon_file", server.icon);
+      form.setValue("banner_file", server.banner);
+      form.setValue("category", server.category);
+      form.setValue(
+        "invite_code",
+        `${env.NEXT_PUBLIC_WEBSITE_URL}/join/${server.invite_code}`,
+      );
+    }
+  }, [server]);
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (data: ServerFormType) => {
-    addServer(data)
+  const onRollInviteCode = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    rollInviteCode(serverId)
       .unwrap()
-      .then(() => {
-        onOpenChange();
-        form.reset();
-        toast.success("Server created successfully");
+      .then((data) => {
+        form.setValue(
+          "invite_code",
+          `${env.NEXT_PUBLIC_WEBSITE_URL}/join/${data}`,
+        );
       })
       .catch((err: any) => {
-        console.log(err);
         if (err.data) {
           for (const field in err.data) {
             err.data[field].forEach((errorMessage: string) => {
@@ -111,10 +114,16 @@ const AddServerModal = (props: Props) => {
           }
         } else {
           console.error(err);
-          toast.error("An error occurred while creating the server");
+          toast.error("An error occurred while rolling the invite code");
         }
       });
   };
+
+  const onSubmit = async (data: FormType) => {
+    console.log(data);
+  };
+
+  const isInviteCodeDisabled = form.watch("status") === "public";
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
@@ -160,64 +169,37 @@ const AddServerModal = (props: Props) => {
               <div className="mt-2 flex w-full gap-8">
                 <FormField
                   control={form.control}
-                  name="category"
+                  name="invite_code"
                   render={({ field }) => (
-                    <FormItem className="flex w-full flex-col">
-                      <FormLabel>Category</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-[200px] justify-between",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value
-                                ? categories?.find(
-                                    (category) =>
-                                      category.id.toString() === field.value,
-                                  )?.name
-                                : "Select category"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search category..." />
-                            <CommandList>
-                              <CommandEmpty>No category found.</CommandEmpty>
-                              <CommandGroup>
-                                {categories?.map((category) => (
-                                  <CommandItem
-                                    value={category.id}
-                                    key={category.id}
-                                    onSelect={() => {
-                                      form.setValue(
-                                        "category",
-                                        category.id.toString(),
-                                      );
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        category.id === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0",
-                                      )}
-                                    />
-                                    {category.name}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                    <FormItem className="relative flex w-full flex-col justify-end gap-2">
+                      <FormLabel>Invite Link</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Invite Code"
+                          disabled={isInviteCodeDisabled}
+                          {...field}
+                          readOnly
+                        />
+                      </FormControl>
+                      <div className="flex w-full justify-end gap-4">
+                        <Button
+                          className="flex self-end rounded-full"
+                          variant={`outline`}
+                          size={"icon"}
+                          onClick={onRollInviteCode}
+                          disabled={isRerollLoading || isInviteCodeDisabled}
+                        >
+                          <RefreshCcw className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          className="flex self-end rounded-full"
+                          variant={`outline`}
+                          size={"icon"}
+                          disabled={isInviteCodeDisabled}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -253,7 +235,7 @@ const AddServerModal = (props: Props) => {
                       <FormControl>
                         <ImageUpload
                           onChange={field.onChange}
-                          onRemove={field.onChange}
+                          onRemove={() => field.onChange(null)}
                           value={field.value}
                         />
                       </FormControl>
@@ -270,7 +252,7 @@ const AddServerModal = (props: Props) => {
                       <FormControl>
                         <ImageUpload
                           onChange={field.onChange}
-                          onRemove={field.onChange}
+                          onRemove={() => field.onChange(null)}
                           value={field.value}
                           type="icon"
                         />
@@ -293,4 +275,4 @@ const AddServerModal = (props: Props) => {
   );
 };
 
-export default AddServerModal;
+export default ServerSettingsModal;
