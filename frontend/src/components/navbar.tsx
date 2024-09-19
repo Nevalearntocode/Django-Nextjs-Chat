@@ -101,7 +101,6 @@ export default function Navbar({}: Props) {
             </div>
           </NavbarTooltip>
           <div className={"flex w-full flex-col items-center gap-4"}>
-            <ServerSettings />
             <ModeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -118,6 +117,7 @@ export default function Navbar({}: Props) {
                 {renderDropdownMenuItems()}
               </DropdownMenuContent>
             </DropdownMenu>
+            <ServerSettings />
           </div>
         </div>
       </div>

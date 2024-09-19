@@ -1,5 +1,5 @@
 import { baseApi } from "../base-api";
-
+import { AddChannelForm as ChannelForm } from "@/components/modals/add-channel-modal";
 export type Channel = {
   id: string;
   name: string;
@@ -25,15 +25,35 @@ export const channelSlice = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: (channels) =>
+        channels
+          ? [
+              ...channels.map(({ id }) => ({ type: "channels", id }) as const),
+              { type: "channels", id: "list" },
+            ]
+          : [{ type: "channels", id: "list" }],
     }),
-
     getChannel: builder.query<Channel, string>({
       query: (id) => ({
         url: `/api/channels/${id}`,
         method: "GET",
       }),
+      providesTags: (channel) =>
+        channel ? [{ type: "channels", id: channel.id }] : [],
+    }),
+    addChannel: builder.mutation<Channel, ChannelForm>({
+      query: (channel) => ({
+        url: "/api/channels/",
+        method: "POST",
+        body: channel,
+      }),
+      invalidatesTags: [{ type: "channels", id: "list" }],
     }),
   }),
 });
 
-export const { useGetChannelsQuery, useGetChannelQuery } = channelSlice;
+export const {
+  useGetChannelsQuery,
+  useGetChannelQuery,
+  useAddChannelMutation,
+} = channelSlice;

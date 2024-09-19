@@ -93,7 +93,7 @@ export default function MobileNavbar({}: Props) {
         "flex h-[80px] w-full flex-col items-center gap-2 bg-zinc-200 py-4 dark:bg-zinc-800 sm:hidden",
       )}
     >
-      <div className="flex h-full w-full justify-center">
+      <div className="flex h-full w-full justify-start px-4">
         <div className="flex gap-2">
           <NavbarTooltip name="Go to homepage">
             <div className="flex w-full justify-center">
