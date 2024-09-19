@@ -29,7 +29,7 @@ export default function DrawerSheet({}: Props) {
     qty: 4,
     category: categoryParam ?? undefined,
   });
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: categories } = useGetCategoriesQuery({});
 
   const onSheetChange = () => {
     dispatch(closeModal());

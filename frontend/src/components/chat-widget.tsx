@@ -97,10 +97,8 @@ export default function ChatWidget({ channelId }: Props) {
               sizes="400px"
               className="object-cover"
             />
-            <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] -skew-x-[15deg] rounded-lg bg-transparent/30 p-4">
-              <p className="-skew-x-[15deg] text-2xl font-bold">
-                {channel.name}
-              </p>
+            <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] -skew-x-[18deg] rounded-lg bg-transparent/30 p-4 text-white dark:bg-transparent/30">
+              <p className="text-2xl font-bold">{channel.name}</p>
             </div>
           </div>
         ) : (

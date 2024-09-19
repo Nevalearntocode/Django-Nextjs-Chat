@@ -5,13 +5,11 @@ import { channelSlice } from "./features/channel-slice";
 import { messageSlice } from "./features/message-slice";
 import { accountSlice } from "./features/account-slice";
 import modal from "./features/modal-slice";
-import globalVar from "./features/global-var-slice";
 import authSlice from "./features/auth-slice";
 
 export const store = configureStore({
   reducer: {
     modal,
-    globalVar,
     category: categorySlice.reducer,
     channel: channelSlice.reducer,
     message: messageSlice.reducer,

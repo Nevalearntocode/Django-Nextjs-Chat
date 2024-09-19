@@ -20,7 +20,7 @@ const Logo = () => {
         <Menu className="h-6 w-6" />
       </div>
       <Link href={`/`}>
-        <div className="flex items-center gap-2 rounded-full bg-muted-foreground/20 p-4 py-1 pl-1 pr-2 hover:bg-muted-foreground/40">
+        <div className="flex items-center gap-2 rounded-full bg-muted-foreground/20 hover:bg-muted-foreground/40">
           <Image
             src={`/logo.jpg`}
             priority
@@ -29,7 +29,6 @@ const Logo = () => {
             alt={`logo`}
             className="h-auto w-auto rounded-full"
           />
-          <p className="text-xl font-bold">DNC</p>
         </div>
       </Link>
     </div>

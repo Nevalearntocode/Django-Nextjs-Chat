@@ -10,20 +10,18 @@ import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useGetChannelsQuery } from "@/redux/features/channel-slice";
 import { UserAvatar } from "./user-avatar";
-import { setChannelName } from "@/redux/features/global-var-slice";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
   const dispatch = useAppDispatch();
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: categories } = useGetCategoriesQuery({});
   const { data: user } = useGetCurrentUserQuery();
   const router = useRouter();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
   const pathname = usePathname();
-  const { serverName } = useAppSelector((state) => state.globalVar);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const isServerRoute =
@@ -38,6 +36,10 @@ export default function SecondaryDraw({}: Props) {
     dispatch(openModal("category"));
   };
 
+  const onAddChannel = () => {
+    dispatch(openModal("channel"));
+  };
+
   const onFilterByCategory = (category: string) => {
     const url = new URL(window.location.href);
     url.searchParams.set("category", category);
@@ -50,12 +52,12 @@ export default function SecondaryDraw({}: Props) {
   return (
     <div
       className={cn(
-        "container relative hidden h-full flex-shrink-0 flex-col overflow-auto transition-all duration-300 ease-in-out scrollbar-hide sm:flex sm:w-[80px] md:w-[160px] lg:w-[240px]",
+        "container relative hidden h-full flex-shrink-0 flex-col overflow-auto transition-all duration-300 ease-in-out scrollbar-hide dark:bg-zinc-900 sm:flex sm:w-[80px] md:w-[160px] lg:w-[240px]",
       )}
     >
-      <div className="flex w-full items-center justify-between border-b-2 p-4 pr-2">
+      <div className="hidden w-full items-center justify-center border-b-2 p-4 md:flex md:justify-between md:pr-2">
         <p className={cn("hidden text-lg font-bold md:block")}>
-          {isServerRoute ? serverName : "Explore"}
+          {isServerRoute ? "Channels" : "Explore"}
         </p>{" "}
         {user?.is_staff && isAuthenticated && (
           <Button
@@ -69,7 +71,7 @@ export default function SecondaryDraw({}: Props) {
         )}
       </div>
       {/* TODO: make this a separate component later */}
-      <div className="mt-1 flex w-full flex-col gap-2 px-4 md:px-2">
+      <div className="mt-2 flex w-full flex-col gap-2 px-4 md:px-2">
         {isServerRoute ? (
           <>
             {channels?.map((channel) => (
@@ -82,7 +84,6 @@ export default function SecondaryDraw({}: Props) {
                 )}
                 key={"12"}
                 onClick={() => {
-                  dispatch(setChannelName(channel.name));
                   router.push(`/servers/${serverId}/channels/${channel.id}`);
                 }}
               >
@@ -119,13 +120,18 @@ export default function SecondaryDraw({}: Props) {
                   height={20}
                   className="h-auto w-auto rounded-full"
                 />
-                <p className="hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
+                <p className="line-clamp-1 hidden font-semibold sm:text-xs md:block md:text-sm lg:text-base">
                   {category.name}
                 </p>
               </div>
             ))}
           </>
         )}
+      </div>
+      <div className="group mb-4 mt-auto flex w-full items-center justify-center pt-2">
+        <Button className="rounded-full md:px-8" onClick={() => {}}>
+          <Plus className="h-4 w-4 md:h-5 md:w-5" />
+        </Button>
       </div>
     </div>
   );

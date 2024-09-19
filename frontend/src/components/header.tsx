@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Navbar from "./navbar";
+import Navbar from "./navbar-legacy";
 import PrimaryDraw from "./primary-draw";
 
 type Props = {};

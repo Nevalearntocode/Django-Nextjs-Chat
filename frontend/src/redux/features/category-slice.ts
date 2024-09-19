@@ -8,13 +8,23 @@ export type Category = {
   icon: string;
 };
 
+export type CategoryArgs = {
+  name?: string;
+};
+
 export const categorySlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCategories: builder.query<Category[], void>({
-      query: () => ({
-        url: "/api/categories/",
-        method: "GET",
-      }),
+    getCategories: builder.query<Category[], CategoryArgs>({
+      query: (args) => {
+        let url = "/api/categories/";
+        if (args.name) {
+          url += `?name=${args.name}`;
+        }
+        return {
+          url,
+          method: "GET",
+        };
+      },
       providesTags: (categories) =>
         categories
           ? [

@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/navbar";
 import PrimaryDraw from "@/components/primary-draw";
 import SecondaryDraw from "@/components/secondary-draw";
 import { Separator } from "@/components/ui/separator";
 import RootProvider from "@/components/providers/root-provider";
+import Navbar from "@/components/navbar";
+import NavbarLegacy from "@/components/navbar-legacy";
+import MobileNavbar from "@/components/mobile-navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,14 +26,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn("flex justify-center", inter.className)}>
         <RootProvider>
-          <div className="mx-auto flex h-full w-full max-w-none flex-col sm:max-w-full lg:max-w-screen-2xl">
-            <Navbar />
+          <div className="mx-auto flex h-full w-full max-w-none flex-col">
+            <MobileNavbar />
             <div className="flex h-full w-full overflow-hidden">
               <PrimaryDraw />
               <Separator orientation="vertical" />
               <SecondaryDraw />
               <Separator orientation="vertical" />
               {children}
+              <Navbar />
             </div>
           </div>
         </RootProvider>

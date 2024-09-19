@@ -1,9 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import React from "react";
-import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
-import NavbarTooltip from "./third-draw-tooltip";
 import Logo from "./logo";
 import { ModeToggle } from "./mode-toggle";
 import { UserAvatar } from "./user-avatar";
@@ -17,16 +14,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
 import {
   useGetCurrentUserQuery,
   useLogoutMutation,
 } from "@/redux/features/account-slice";
 import { setIsloading, setLogout } from "@/redux/features/auth-slice";
-import ServerSettings from "./server-settings";
 
 type Props = {};
 
-export default function Navbar({}: Props) {
+export default function NavbarLegacy({}: Props) {
   const dispatch = useAppDispatch();
   const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
@@ -88,37 +85,22 @@ export default function Navbar({}: Props) {
   };
 
   return (
-    <div
-      className={cn(
-        "hidden h-full w-[80px] flex-col items-center gap-8 bg-zinc-200 py-4 dark:bg-zinc-800 sm:flex",
-      )}
-    >
-      <div className="500 flex h-full w-full justify-center">
-        <div className="container flex flex-col gap-4">
-          <NavbarTooltip name="Go to homepage">
-            <div className="flex w-full justify-center">
-              <Logo />
-            </div>
-          </NavbarTooltip>
-          <div className={"flex w-full flex-col items-center gap-4"}>
-            <ServerSettings />
-            <ModeToggle />
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <UserAvatar
-                  name={user?.username ?? "user"}
-                  image={
-                    user && isAuthenticated
-                      ? undefined
-                      : `/default-avatar-image.jpg`
-                  }
-                />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {renderDropdownMenuItems()}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+    <div className="flex h-[75px] w-full justify-center border-2 border-solid px-4 md:px-20">
+      <div className="container flex h-full items-center justify-between">
+        <Logo />
+        <div className="flex gap-4">
+          <ModeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <UserAvatar
+                name={user?.username ?? "user"}
+                image={user && isAuthenticated ? undefined : `/default-avatar-image.jpg`}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {renderDropdownMenuItems()}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

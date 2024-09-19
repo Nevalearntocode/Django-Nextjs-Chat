@@ -1,4 +1,5 @@
 import { baseApi } from "../base-api";
+import { ServerFormType as ServerForm } from "@/components/modals/add-server-modal";
 
 type Server = {
   id: string;
@@ -52,8 +53,27 @@ export const serverSlice = baseApi.injectEndpoints({
     }),
     getServer: builder.query<Server, string>({
       query: (id) => ({ url: `/api/servers/${id}`, method: "GET" }),
+      providesTags: (server) =>
+        server ? [{ type: "servers", id: server.id }] : [],
+    }),
+    addServer: builder.mutation<Server, ServerForm>({
+      query: (server) => {
+        const formData = new FormData();
+
+        for (const [key, value] of Object.entries(server)) {
+          formData.append(key, value as string);
+        }
+
+        return {
+          url: "/api/servers/",
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: [{ type: "servers", id: "list" }],
     }),
   }),
 });
 
-export const { useGetServersQuery, useGetServerQuery } = serverSlice;
+export const { useGetServersQuery, useGetServerQuery, useAddServerMutation } =
+  serverSlice;

@@ -6,7 +6,18 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
-export function ModeToggle() {
+export function ModeToggle({
+  variant = "outline",
+}: {
+  variant?:
+    | "outline"
+    | "default"
+    | "destructive"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | null;
+}) {
   const { theme, setTheme } = useTheme();
   const [isClient, setIsClient] = React.useState(false);
 
@@ -28,7 +39,7 @@ export function ModeToggle() {
 
   return (
     <Button
-      variant="outline"
+      variant={variant}
       size="icon"
       onClick={toggleTheme}
       className="rounded-full"

@@ -38,10 +38,10 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command";
-import { CheckboxIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "../ui/checkbox";
 import ImageUpload from "../image-upload";
-import { UserAvatar } from "../user-avatar";
+import { useAddServerMutation } from "@/redux/features/server-slice";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -54,14 +54,15 @@ const formSchema = z.object({
   category: z.string().min(1, { message: "Category is required" }),
 });
 
-type FormType = z.infer<typeof formSchema>;
+export type ServerFormType = z.infer<typeof formSchema>;
 
 const AddServerModal = (props: Props) => {
   const { isOpen, type } = useAppSelector((state) => state.modal);
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: categories } = useGetCategoriesQuery({});
   const isModalOpen = isOpen && type === "server";
   const dispatch = useAppDispatch();
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const [addServer] = useAddServerMutation();
 
   const adjustHeight = () => {
     if (textareaRef.current) {
@@ -70,7 +71,7 @@ const AddServerModal = (props: Props) => {
     }
   };
 
-  const form = useForm<FormType>({
+  const form = useForm<ServerFormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -92,8 +93,27 @@ const AddServerModal = (props: Props) => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (data: FormType) => {
-    console.log(data);
+  const onSubmit = async (data: ServerFormType) => {
+    addServer(data)
+      .unwrap()
+      .then(() => {
+        onOpenChange();
+        form.reset();
+        toast.success("Server created successfully");
+      })
+      .catch((err: any) => {
+        console.log(err)
+        if (err.data) {
+          for (const field in err.data) {
+            err.data[field].forEach((errorMessage: string) => {
+              toast.error(errorMessage);
+            });
+          }
+        } else {
+          console.error(err);
+          toast.error("An error occurred while creating the server");
+        }
+      });
   };
 
   return (
@@ -157,7 +177,7 @@ const AddServerModal = (props: Props) => {
                             >
                               {field.value
                                 ? categories?.find(
-                                    (category) => category.id === field.value,
+                                    (category) => category.id.toString() === field.value,
                                   )?.name
                                 : "Select category"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -175,7 +195,7 @@ const AddServerModal = (props: Props) => {
                                     value={category.id}
                                     key={category.id}
                                     onSelect={() => {
-                                      form.setValue("category", category.id);
+                                      form.setValue("category", category.id.toString());
                                     }}
                                   >
                                     <Check
