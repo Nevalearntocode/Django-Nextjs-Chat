@@ -10,6 +10,7 @@ import ChangePasswordModal from "../modals/change-password-modal";
 import AddServerModal from "../modals/add-server-modal";
 import AddChannelModal from "../modals/add-channel-modal";
 import ServerSettingsModal from "../modals/server-settings-modal";
+import InviteLinkModal from "../modals/invite-link-modal";
 
 export const ModalProvider = () => {
   const [isClient, setIsClient] = useState(false);
@@ -28,6 +29,7 @@ export const ModalProvider = () => {
       <AddServerModal />
       <AddChannelModal />
       <ServerSettingsModal />
+      <InviteLinkModal />
       <DrawerSheet />
       <RegisterModal />
       <LoginModal />

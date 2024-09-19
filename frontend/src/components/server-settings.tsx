@@ -8,8 +8,8 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useGetServerQuery } from "@/redux/features/server-slice";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { openModal } from "@/redux/features/modal-slice";
+import { useAppSelector } from "@/redux/hooks";
+import ServerSettingsOption from "./server-settings-option";
 
 type Props = {};
 
@@ -19,13 +19,8 @@ export default function ServerSettings({}: Props) {
   const { data: server } = useGetServerQuery(serverId);
   const { data: currentUser } = useGetCurrentUserQuery();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
 
   const isOwner = server && server.owner === currentUser?.username;
-
-  const onServerSettings = () => {
-    dispatch(openModal("server-settings"));
-  };
 
   if (!isAuthenticated) return null;
 
@@ -39,13 +34,11 @@ export default function ServerSettings({}: Props) {
       {isOwner ? (
         <>
           <NavbarTooltip name={`Settings`}>
-            <Button
-              className="rounded-full"
-              size={`icon`}
-              onClick={onServerSettings}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
+            <ServerSettingsOption>
+              <Button className="rounded-full" size={`icon`}>
+                <Settings className="h-4 w-4" />
+              </Button>
+            </ServerSettingsOption>
           </NavbarTooltip>
           <NavbarTooltip name="Channels">
             <Button className="rounded-full" size={`icon`}>

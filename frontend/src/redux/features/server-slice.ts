@@ -1,5 +1,6 @@
 import { baseApi } from "../base-api";
 import { ServerFormType as ServerForm } from "@/components/modals/add-server-modal";
+import { UpdateServerFormType as UpdateServerForm } from "@/components/modals/server-settings-modal";
 
 type Server = {
   id: string;
@@ -74,6 +75,23 @@ export const serverSlice = baseApi.injectEndpoints({
       },
       invalidatesTags: [{ type: "servers", id: "list" }],
     }),
+    updateServer: builder.mutation<
+      Server,
+      { server: UpdateServerForm; id: string }
+    >({
+      query: (args) => {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(args.server)) {
+          formData.append(key, value as string);
+        }
+        return {
+          url: `/api/servers/${args.id}/`,
+          method: "PATCH",
+          body: formData,
+        };
+      },
+      invalidatesTags: (result, error, args) => [{ type: "servers", id: args.id }],
+    }),
     rollInviteCode: builder.mutation<void, string>({
       query: (id) => ({
         url: `/api/servers/${id}/roll_invite_code/`,
@@ -81,6 +99,13 @@ export const serverSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: "servers", id }],
     }),
+    toggleStatus: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/servers/${id}/toggle_status/`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "servers", id }],
+    })
   }),
 });
 
@@ -88,5 +113,7 @@ export const {
   useGetServersQuery,
   useGetServerQuery,
   useAddServerMutation,
+  useUpdateServerMutation,
   useRollInviteCodeMutation,
+  useToggleStatusMutation
 } = serverSlice;

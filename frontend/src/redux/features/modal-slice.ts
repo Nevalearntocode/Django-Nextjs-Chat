@@ -12,6 +12,7 @@ type ModalState = {
     | "server"
     | "channel"
     | "server-settings"
+    | "invite-link"
     | null;
   deleteMessageId: string | null;
 };

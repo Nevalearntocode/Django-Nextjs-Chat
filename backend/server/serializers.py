@@ -50,11 +50,19 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     def update(self, instance, validated_data):
         current_icon = instance.icon
         current_banner = instance.banner
-        if "banner" in validated_data and validated_data["banner"] != None:
+        if (
+            "banner" in validated_data
+            and validated_data["banner"] != None
+            and current_banner != None
+        ):
             request_banner = self.upload_image(validated_data["banner"])
             self.delete_image(current_banner, request_banner)
             validated_data["banner"] = request_banner
-        if "icon" in validated_data and validated_data["icon"] != None:
+        if (
+            "icon" in validated_data
+            and validated_data["icon"] != None
+            and current_icon != None
+        ):
             request_icon = self.upload_image(validated_data["icon"])
             self.delete_image(current_icon, request_icon)
             validated_data["icon"] = request_icon
