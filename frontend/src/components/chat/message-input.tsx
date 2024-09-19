@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { X } from "lucide-react";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 

@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import React from "react";
 import { LogOut, MessageCircle, Settings, Trash2, Users2 } from "lucide-react";
-import NavbarTooltip from "./third-draw-tooltip";
+import NavbarTooltip from "./tooltips/navbar-tooltip";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useGetServerQuery } from "@/redux/features/server-slice";

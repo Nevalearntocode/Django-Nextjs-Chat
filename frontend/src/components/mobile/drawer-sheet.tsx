@@ -11,7 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeModal } from "@/redux/features/modal-slice";
 import { useGetServersQuery } from "@/redux/features/server-slice";
-import { UserAvatar } from "./user-avatar";
+import { UserAvatar } from "../user-avatar";
 import { cn } from "@/lib/utils";
 import { useGetCategoriesQuery } from "@/redux/features/category-slice";
 import Image from "next/image";

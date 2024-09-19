@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import PrimaryDraw from "@/components/primary-draw";
-import SecondaryDraw from "@/components/secondary-draw";
+import PrimaryDraw from "@/components/navbars/primary-draw";
+import SecondaryDraw from "@/components/navbars/secondary-draw";
 import { Separator } from "@/components/ui/separator";
 import RootProvider from "@/components/providers/root-provider";
-import Navbar from "@/components/navbar";
-import NavbarLegacy from "@/components/navbar-legacy";
-import MobileNavbar from "@/components/mobile-navbar";
+import MobileNavbar from "@/components/mobile/mobile-navbar";
+import Navbar from "@/components/navbars/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 

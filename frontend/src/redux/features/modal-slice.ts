@@ -11,6 +11,7 @@ type ModalState = {
     | "change-password"
     | "server"
     | "channel"
+    | "server-settings"
     | null;
   deleteMessageId: string | null;
 };

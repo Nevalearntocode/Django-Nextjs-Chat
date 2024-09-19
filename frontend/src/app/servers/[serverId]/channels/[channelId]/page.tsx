@@ -1,4 +1,4 @@
-import ChatWidget from "@/components/chat-widget";
+import ChatWidget from "@/components/chat/chat-widget";
 import React from "react";
 
 type Props = {

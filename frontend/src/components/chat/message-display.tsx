@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "./ui/button";
 import { Pencil, Trash } from "lucide-react";
 import { format } from "date-fns";
 import { useAppDispatch } from "@/redux/hooks";
 import { openModal, setDeleteMessageId } from "@/redux/features/modal-slice";
 import { Message } from "@/redux/features/message-slice";
-import { UserAvatar } from "./user-avatar";
+import { UserAvatar } from "../user-avatar";
+import { Button } from "../ui/button";
 
 type Props = {
   message: Message;

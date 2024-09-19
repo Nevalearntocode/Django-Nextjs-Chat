@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useGetChannelsQuery } from "@/redux/features/channel-slice";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { UserAvatar } from "./user-avatar";
+import { UserAvatar } from "../user-avatar";
 
 type Props = {
   serverId: string;
@@ -21,7 +21,7 @@ export default function ChannelList({ serverId }: Props) {
       {channels?.map((channel) => (
         <div
           className={cn(
-            "flex w-full cursor-pointer items-center justify-start gap-2 rounded-full py-1 hover:bg-muted-foreground/10 md:rounded-lg md:bg-muted-foreground/10 md:p-4 md:hover:bg-muted-foreground/40 lg:gap-4",
+            "flex w-full cursor-pointer items-center justify-center gap-2 rounded-full py-1 hover:bg-muted-foreground/10 md:justify-start md:rounded-lg md:bg-muted-foreground/10 md:p-4 md:hover:bg-muted-foreground/40 lg:gap-4",
             false ? "bg-muted-foreground/10 hover:bg-muted-foreground/40" : "",
           )}
           key={channel.id}

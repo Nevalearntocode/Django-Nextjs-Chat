@@ -9,20 +9,20 @@ import {
 import { cn } from "@/lib/utils";
 
 import React from "react";
-import { UserAvatar } from "./user-avatar";
+import { UserAvatar } from "../user-avatar";
 
 type Props = {
   children: React.ReactNode;
   name: string;
   description: string;
-  banner: string;
+  icon: string;
 };
 
 export default function ServerTooltip({
   children,
   name,
   description,
-  banner,
+  icon,
 }: Props) {
   return (
     <TooltipProvider>
@@ -37,7 +37,7 @@ export default function ServerTooltip({
               "flex items-center justify-center gap-4 rounded-lg py-4 lg:justify-start",
             )}
           >
-            <UserAvatar name={name} image={banner} />
+            <UserAvatar name={name} image={icon} />
             <div className={cn("flex flex-col")}>
               <p className="line-clamp-1 text-left text-lg font-semibold capitalize">
                 {name}

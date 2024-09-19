@@ -2,8 +2,8 @@
 
 import React from "react";
 import Logo from "./logo";
-import { ModeToggle } from "./mode-toggle";
-import { UserAvatar } from "./user-avatar";
+import { ModeToggle } from "../mode-toggle";
+import { UserAvatar } from "../user-avatar"; 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
 import {
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
 import {
   useGetCurrentUserQuery,

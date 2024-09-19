@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AddCategoryModal from "../modals/add-category-modal";
-import DrawerSheet from "../drawer-sheet";
+import DrawerSheet from "../mobile/drawer-sheet";
 import RegisterModal from "../modals/register-modal";
 import LoginModal from "../modals/login-modal";
 import DeleteMessageModal from "../modals/delete-message-modal";

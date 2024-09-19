@@ -1,15 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
-import { useGetCategoriesQuery } from "@/redux/features/category-slice";
-import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useGetChannelsQuery } from "@/redux/features/channel-slice";
-import { UserAvatar } from "./user-avatar";
+import { usePathname } from "next/navigation";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 import ChannelList from "./channel-list";
 import CategoryList from "./category-list";
