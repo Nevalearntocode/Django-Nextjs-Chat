@@ -87,7 +87,7 @@ export default function InviteLinkModal({}: Props) {
 
   const onCopyInviteLink = () => {
     navigator.clipboard.writeText(
-      `${env.NEXT_PUBLIC_WEBSITE_URL}/join/${server?.invite_code}?serverId=${serverId}`,
+      `${env.NEXT_PUBLIC_WEBSITE_URL}/servers/${server?.id}/?invite_code=${server?.invite_code}`,
     );
     toast.success("Invite link copied to clipboard");
     setisCopiedLoading(true);

@@ -4,7 +4,8 @@ import { UpdateServerFormType as UpdateServerForm } from "@/components/modals/se
 
 type Server = {
   id: string;
-  members: number;
+  members: string[];
+  amount_members: number;
   name: string;
   description: string;
   category: string;
@@ -90,7 +91,9 @@ export const serverSlice = baseApi.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: (result, error, args) => [{ type: "servers", id: args.id }],
+      invalidatesTags: (result, error, args) => [
+        { type: "servers", id: args.id },
+      ],
     }),
     rollInviteCode: builder.mutation<void, string>({
       query: (id) => ({
@@ -105,7 +108,29 @@ export const serverSlice = baseApi.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: (result, error, id) => [{ type: "servers", id }],
-    })
+    }),
+    joinServer: builder.mutation<void, { id: string; invite_code?: string }>({
+      query: (args) => {
+        let url = `/api/servers/${args.id}/join/`;
+        if (args.invite_code) {
+          url += `?invite_code=${args.invite_code}`;
+        }
+        return {
+          url,
+          method: "POST",
+        };
+      },
+      invalidatesTags: (result, error, args) => [
+        { type: "servers", id: args.id },
+      ],
+    }),
+    leaveServer: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/servers/${id}/leave/`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "servers", id }],
+    }),
   }),
 });
 
@@ -115,5 +140,7 @@ export const {
   useAddServerMutation,
   useUpdateServerMutation,
   useRollInviteCodeMutation,
-  useToggleStatusMutation
+  useToggleStatusMutation,
+  useJoinServerMutation,
+  useLeaveServerMutation,
 } = serverSlice;

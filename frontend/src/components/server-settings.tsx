@@ -8,8 +8,9 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useGetServerQuery } from "@/redux/features/server-slice";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ServerSettingsOption from "./server-settings-option";
+import { openModal } from "@/redux/features/modal-slice";
 
 type Props = {};
 
@@ -19,10 +20,19 @@ export default function ServerSettings({}: Props) {
   const { data: server } = useGetServerQuery(serverId);
   const { data: currentUser } = useGetCurrentUserQuery();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-
-  const isOwner = server && server.owner === currentUser?.username;
+  const dispatch = useAppDispatch();
 
   if (!isAuthenticated) return null;
+
+  const isOwner = server && server.owner === currentUser?.username;
+  const isMember =
+    server && server.members && server.members.includes(currentUser?.id ?? "");
+
+  const onLeaveServer = () => {
+    dispatch(openModal("server-leave"));
+  };
+
+  console.log(isMember);
 
   return (
     <div
@@ -33,13 +43,11 @@ export default function ServerSettings({}: Props) {
     >
       {isOwner ? (
         <>
-          <NavbarTooltip name={`Settings`}>
-            <ServerSettingsOption>
-              <Button className="rounded-full" size={`icon`}>
-                <Settings className="h-4 w-4" />
-              </Button>
-            </ServerSettingsOption>
-          </NavbarTooltip>
+          <ServerSettingsOption>
+            <Button className="rounded-full" size={`icon`}>
+              <Settings className="h-4 w-4" />
+            </Button>
+          </ServerSettingsOption>
           <NavbarTooltip name="Channels">
             <Button className="rounded-full" size={`icon`}>
               <MessageCircle className="h-4 w-4" />
@@ -62,15 +70,20 @@ export default function ServerSettings({}: Props) {
           </NavbarTooltip>
         </>
       ) : (
-        <NavbarTooltip name="Leave">
-          <Button
-            className="rounded-full"
-            size={`icon`}
-            variant={`destructive`}
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
-        </NavbarTooltip>
+        <>
+          {isMember && (
+            <NavbarTooltip name="Leave">
+              <Button
+                className="rounded-full"
+                size={`icon`}
+                variant={`destructive`}
+                onClick={onLeaveServer}
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </NavbarTooltip>
+          )}
+        </>
       )}
     </div>
   );

@@ -3,16 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 type ModalState = {
   isOpen: boolean;
   type:
-    | "category"
     | "mobile-sheet"
     | "login"
     | "register"
-    | "delete-message"
     | "change-password"
-    | "server"
     | "channel"
+    | "category"
+    | "server"
     | "server-settings"
+    | "server-join"
+    | "server-leave"
     | "invite-link"
+    | "delete-message"
     | null;
   deleteMessageId: string | null;
 };

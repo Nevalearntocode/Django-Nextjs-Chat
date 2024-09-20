@@ -52,7 +52,7 @@ export default function SecondaryDraw({}: Props) {
         )}
       </div>
       <div className="mt-2 flex w-full flex-col gap-2 px-4 md:px-2">
-        {isServerRoute && serverId ? (
+        {isServerRoute && serverId && isAuthenticated ? (
           <ChannelList serverId={serverId} />
         ) : (
           <CategoryList />

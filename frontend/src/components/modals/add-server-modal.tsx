@@ -151,7 +151,11 @@ const AddServerModal = (props: Props) => {
                   <FormItem className="">
                     <FormLabel>Server Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Description" {...field} />
+                      <Textarea
+                        placeholder="Description"
+                        {...field}
+                        ref={textareaRef}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
