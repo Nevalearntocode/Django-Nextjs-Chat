@@ -23,7 +23,6 @@ import {
 } from "@/redux/features/account-slice";
 import { setIsloading, setLogout } from "@/redux/features/auth-slice";
 import ServerSettings from "../server-settings";
-import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -32,7 +31,6 @@ export default function Navbar({}: Props) {
   const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
   const { data: user } = useGetCurrentUserQuery();
-  const router = useRouter();
 
   const handleLogout = () => {
     dispatch(setIsloading(true));
@@ -40,7 +38,6 @@ export default function Navbar({}: Props) {
       .unwrap()
       .then(() => {
         dispatch(setLogout());
-        router.push(`/`);
       })
       .catch((err) => {
         console.log(err);
@@ -54,7 +51,7 @@ export default function Navbar({}: Props) {
     if (isAuthenticated) {
       return (
         <>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => dispatch(openModal("change-password"))}

@@ -32,7 +32,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     banner_file = FileFieldWithoutValidation(write_only=True)
     icon_file = FileFieldWithoutValidation(write_only=True)
     members = MembersSerializer(many=True, read_only=True)
-    banned = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    banned = MembersSerializer(many=True, read_only=True)
 
     class Meta:
         model = Server
@@ -97,9 +97,6 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
             data["icon"] = (
                 f"{settings.WEBSITE_URL}/media/server/default-server-icon.png"
             )
-
-        if not data["owner"] == user.username:
-            data["banned"] = None
 
         if user.id not in [member["id"] for member in data["members"]]:
             data["invite_code"] = None

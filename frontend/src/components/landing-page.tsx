@@ -50,10 +50,14 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
         })
         .catch((err: any) => {
           if (err.data) {
-            for (const field in err.data) {
-              err.data[field].forEach((errorMessage: string) => {
-                toast.error(errorMessage);
-              });
+            if (Array.isArray(err.data)) {
+              for (const field in err.data) {
+                err.data[field].forEach((errorMessage: string) => {
+                  toast.error(errorMessage);
+                });
+              }
+            } else {
+              toast.error(err.data.detail);
             }
           } else {
             console.error(err);

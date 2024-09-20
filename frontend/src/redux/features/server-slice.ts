@@ -5,6 +5,7 @@ import { UpdateServerFormType as UpdateServerForm } from "@/components/modals/se
 type Server = {
   id: string;
   members: { id: string; username: string }[];
+  banned: { id: string; username: string }[];
   amount_members: number;
   name: string;
   description: string;
@@ -141,6 +142,49 @@ export const serverSlice = baseApi.injectEndpoints({
         { type: "servers", id: "list" },
       ],
     }),
+    kickFromServer: builder.mutation<void, { id: string; members: string[] }>({
+      query: (args) => {
+        const formData = new FormData();
+        formData.append("members", args.members.join(","));
+        return {
+          url: `/api/servers/${args.id}/kick/`,
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: (result, error, args) => [
+        { type: "servers", id: args.id },
+      ],
+    }),
+    banFromServer: builder.mutation<void, { id: string; members: string[] }>({
+      query: (args) => {
+        const formData = new FormData();
+        formData.append("members", args.members.join(","));
+        return {
+          url: `/api/servers/${args.id}/ban/`,
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: (result, error, args) => [
+        { type: "servers", id: args.id },
+      ],
+    }),
+
+    unbanFromServer: builder.mutation<void, { id: string; members: string[] }>({
+      query: (args) => {
+        const formData = new FormData();
+        formData.append("members", args.members.join(","));
+        return {
+          url: `/api/servers/${args.id}/unban/`,
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: (result, error, args) => [
+        { type: "servers", id: args.id },
+      ],
+    }),
   }),
 });
 
@@ -154,4 +198,7 @@ export const {
   useJoinServerMutation,
   useLeaveServerMutation,
   useDeleteServerMutation,
+  useKickFromServerMutation,
+  useBanFromServerMutation,
+  useUnbanFromServerMutation,
 } = serverSlice;

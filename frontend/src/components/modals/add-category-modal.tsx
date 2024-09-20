@@ -145,6 +145,7 @@ const AddCategoryModal = (props: Props) => {
                       onChange={field.onChange}
                       onRemove={field.onChange}
                       value={field.value}
+                      type="icon"
                     />
                   </FormControl>
                   <FormMessage />
