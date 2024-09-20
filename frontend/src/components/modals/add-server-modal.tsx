@@ -62,7 +62,7 @@ const AddServerModal = (props: Props) => {
   const isModalOpen = isOpen && type === "server";
   const dispatch = useAppDispatch();
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const [addServer] = useAddServerMutation();
+  const [addServer, { isLoading: isAddServerLoading }] = useAddServerMutation();
 
   const adjustHeight = () => {
     if (textareaRef.current) {
@@ -285,7 +285,10 @@ const AddServerModal = (props: Props) => {
                 />
               </div>
               <div className="mt-4 flex w-full justify-end">
-                <Button type="submit" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  disabled={isLoading || isAddServerLoading}
+                >
                   Confirm
                 </Button>
               </div>

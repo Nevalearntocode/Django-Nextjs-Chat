@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AddCategoryModal from "../modals/add-category-modal";
-import DrawerSheet from "../mobile/drawer-sheet";
-import RegisterModal from "../modals/register-modal";
-import LoginModal from "../modals/login-modal";
-import DeleteMessageModal from "../modals/delete-message-modal";
-import ChangePasswordModal from "../modals/change-password-modal";
-import AddServerModal from "../modals/add-server-modal";
-import AddChannelModal from "../modals/add-channel-modal";
-import ServerSettingsModal from "../modals/server-settings-modal";
-import InviteLinkModal from "../modals/invite-link-modal";
-import LeaveServerModal from "../modals/leave-server-modal";
+import LoginModal from "@/components/modals/login-modal";
+import DrawerSheet from "@/components/mobile/drawer-sheet";
+import RegisterModal from "@/components/modals/register-modal";
+import AddServerModal from "@/components/modals/add-server-modal";
+import AddChannelModal from "@/components/modals/add-channel-modal";
+import InviteLinkModal from "@/components/modals/invite-link-modal";
+import AddCategoryModal from "@/components/modals/add-category-modal";
+import LeaveServerModal from "@/components/modals/leave-server-modal";
+import DeleteServerModal from "@/components/modals/delete-server-modal";
+import ManageMembersModal from "@/components/modals/manage-members-modal";
+import DeleteMessageModal from "@/components/modals/delete-message-modal";
+import ChangePasswordModal from "@/components/modals/change-password-modal";
+import ServerSettingsModal from "@/components/modals/server-settings-modal";
 
 export const ModalProvider = () => {
   const [isClient, setIsClient] = useState(false);
@@ -31,6 +33,8 @@ export const ModalProvider = () => {
       <AddChannelModal />
       <ServerSettingsModal />
       <LeaveServerModal />
+      <ManageMembersModal />
+      <DeleteServerModal />
       <InviteLinkModal />
       <DrawerSheet />
       <RegisterModal />

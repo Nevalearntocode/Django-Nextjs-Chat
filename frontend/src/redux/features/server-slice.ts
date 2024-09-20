@@ -4,7 +4,7 @@ import { UpdateServerFormType as UpdateServerForm } from "@/components/modals/se
 
 type Server = {
   id: string;
-  members: string[];
+  members: { id: string; username: string }[];
   amount_members: number;
   name: string;
   description: string;
@@ -131,6 +131,16 @@ export const serverSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: "servers", id }],
     }),
+    deleteServer: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/servers/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "servers", id },
+        { type: "servers", id: "list" },
+      ],
+    }),
   }),
 });
 
@@ -143,4 +153,5 @@ export const {
   useToggleStatusMutation,
   useJoinServerMutation,
   useLeaveServerMutation,
+  useDeleteServerMutation,
 } = serverSlice;

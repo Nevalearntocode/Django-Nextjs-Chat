@@ -26,10 +26,24 @@ export default function ServerSettings({}: Props) {
 
   const isOwner = server && server.owner === currentUser?.username;
   const isMember =
-    server && server.members && server.members.includes(currentUser?.id ?? "");
+    server &&
+    server.members &&
+    server.members.find((member) => member.id === currentUser?.id);
 
   const onLeaveServer = () => {
     dispatch(openModal("server-leave"));
+  };
+
+  const onManageMembers = () => {
+    dispatch(openModal("server-members"));
+  };
+
+  const onManageChannels = () => {
+    dispatch(openModal("server-channels"));
+  };
+
+  const onDeleteServer = () => {
+    dispatch(openModal("server-delete"));
   };
 
   return (
@@ -47,12 +61,20 @@ export default function ServerSettings({}: Props) {
             </Button>
           </ServerSettingsOption>
           <NavbarTooltip name="Channels">
-            <Button className="rounded-full" size={`icon`}>
+            <Button
+              className="rounded-full"
+              size={`icon`}
+              onClick={onManageChannels}
+            >
               <MessageCircle className="h-4 w-4" />
             </Button>
           </NavbarTooltip>
           <NavbarTooltip name="Members">
-            <Button className="rounded-full" size={`icon`}>
+            <Button
+              className="rounded-full"
+              size={`icon`}
+              onClick={onManageMembers}
+            >
               <Users2 className="h-4 w-4" />
             </Button>
           </NavbarTooltip>
@@ -62,6 +84,7 @@ export default function ServerSettings({}: Props) {
               className="rounded-full"
               size={`icon`}
               variant={`destructive`}
+              onClick={onDeleteServer}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

@@ -23,7 +23,9 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
   const { data: user } = useGetCurrentUserQuery();
 
   const isMember =
-    server && server.members && server.members.includes(user?.id ?? "");
+    server &&
+    server.members &&
+    server.members.find((member) => member.id === user?.id);
 
   const isOwner = server && server.owner === user?.username;
 

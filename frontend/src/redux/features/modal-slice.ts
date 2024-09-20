@@ -13,6 +13,9 @@ type ModalState = {
     | "server-settings"
     | "server-join"
     | "server-leave"
+    | "server-members"
+    | "server-channels"
+    | "server-delete"
     | "invite-link"
     | "delete-message"
     | null;

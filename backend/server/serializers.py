@@ -16,6 +16,12 @@ def get_one_or_two():
     return random.choice([1, 2])
 
 
+class MembersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username"]
+
+
 class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     url = serializers.HyperlinkedIdentityField(view_name="server-detail")
     owner = serializers.ReadOnlyField(source="owner.username")
@@ -25,7 +31,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     icon = serializers.ReadOnlyField()
     banner_file = FileFieldWithoutValidation(write_only=True)
     icon_file = FileFieldWithoutValidation(write_only=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    members = MembersSerializer(many=True, read_only=True)
     banned = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
@@ -95,7 +101,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
         if not data["owner"] == user.username:
             data["banned"] = None
 
-        if not user.id in data["members"]:
+        if user.id not in [member["id"] for member in data["members"]]:
             data["invite_code"] = None
             data["members"] = None
 
