@@ -32,12 +32,10 @@ export default function ServerSettings({}: Props) {
     dispatch(openModal("server-leave"));
   };
 
-  console.log(isMember);
-
   return (
     <div
       className={cn(
-        "flex w-full items-center gap-2 sm:flex-col sm:gap-4",
+        "flex w-full items-center justify-center gap-4 sm:flex-col",
         !serverId && "hidden",
       )}
     >

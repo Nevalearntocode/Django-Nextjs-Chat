@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -36,14 +36,16 @@ import { toast } from "sonner";
 
 type Props = {};
 
-const formSchema = z.object({
+export const updateServerSettingsFormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string(),
   icon_file: z.union([z.instanceof(File), z.string()]).nullable(),
   banner_file: z.union([z.instanceof(File), z.string()]).nullable(),
 });
 
-export type UpdateServerFormType = z.infer<typeof formSchema>;
+export type UpdateServerFormType = z.infer<
+  typeof updateServerSettingsFormSchema
+>;
 
 const ServerSettingsModal = (props: Props) => {
   const dispatch = useAppDispatch();
@@ -53,13 +55,21 @@ const ServerSettingsModal = (props: Props) => {
   const serverId = pathname.split("/")[2];
   const { data: server } = useGetServerQuery(serverId);
   const [updateServer] = useUpdateServerMutation();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
 
   const onOpenChange = () => {
     dispatch(closeModal());
   };
 
   const form = useForm<UpdateServerFormType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(updateServerSettingsFormSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -78,6 +88,10 @@ const ServerSettingsModal = (props: Props) => {
   }, [server]);
 
   const isLoading = form.formState.isSubmitting;
+
+  useEffect(() => {
+    adjustHeight();
+  }, [form.watch("description")]);
 
   const onSubmit = async (data: UpdateServerFormType) => {
     updateServer({ server: data, id: serverId })
@@ -106,7 +120,7 @@ const ServerSettingsModal = (props: Props) => {
       <DialogOverlay className="opacity-60">
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create your server</DialogTitle>
+            <DialogTitle>Customize your server</DialogTitle>
             <DialogDescription>
               What do you want your server to look like?
             </DialogDescription>
@@ -136,7 +150,11 @@ const ServerSettingsModal = (props: Props) => {
                   <FormItem className="">
                     <FormLabel>Server Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Description" {...field} />
+                      <Textarea
+                        placeholder="Description"
+                        {...field}
+                        ref={textareaRef}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -25,6 +25,8 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
   const isMember =
     server && server.members && server.members.includes(user?.id ?? "");
 
+  const isOwner = server && server.owner === user?.username;
+
   const onJoinServer = () => {
     if (!isAuthenticated) {
       dispatch(openModal("login"));
@@ -62,9 +64,10 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
   if (!server) return null;
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-8">
-      <div className="relative h-[250px] w-[360px] rounded-md">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-8 md:justify-start">
+      <div className="relative h-[160px] w-[250px] rounded-md md:h-[250px] md:w-[360px]">
         <Image
+          priority
           src={server.banner}
           alt="Server Image"
           fill
@@ -77,7 +80,7 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
         </h2>
         <p className="text-nowrap text-center text-xs">{server.description}</p>
       </div>
-      {(!isMember || !isAuthenticated) && (
+      {(!isMember || !isAuthenticated) && !isOwner && (
         <Button onClick={onJoinServer} disabled={isLoading}>
           Join this server
         </Button>

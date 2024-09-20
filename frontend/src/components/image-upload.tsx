@@ -73,7 +73,7 @@ const ImageUpload = ({ onChange, value, onRemove, type = "image" }: Props) => {
               type === "image" ? "-right-3" : "left-10",
             )}
             size={`icon`}
-            variant={`destructive`}
+            variant={`secondary`}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();

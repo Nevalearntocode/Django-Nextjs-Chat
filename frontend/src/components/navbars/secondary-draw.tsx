@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 import ChannelList from "./channel-list";
 import CategoryList from "./category-list";
+import { useGetServerQuery } from "@/redux/features/server-slice";
 
 type Props = {};
 
@@ -20,7 +21,14 @@ export default function SecondaryDraw({}: Props) {
 
   const isServerRoute =
     pathname.startsWith("/servers") || pathname.startsWith("/channels");
-  const serverId = isServerRoute && pathname.split("/")[2];
+  const serverId = pathname.split("/")[2];
+
+  const { data: server } = useGetServerQuery(serverId);
+
+  const isMember =
+    server && server.members && server.members.includes(user?.id || "");
+
+  const isOwner = server && server.owner === user?.username;
 
   const onAddCategory = () => {
     dispatch(openModal("category"));
@@ -38,7 +46,7 @@ export default function SecondaryDraw({}: Props) {
     >
       <div className="hidden w-full items-center justify-center border-b-2 p-4 md:flex md:justify-between md:pr-2">
         <p className={cn("hidden text-lg font-bold md:block")}>
-          {isServerRoute ? "Channels" : "Explore"}
+          {isMember && isAuthenticated && server ? "Channels" : "Explore"}
         </p>{" "}
         {user?.is_staff && isAuthenticated && (
           <Button
@@ -52,13 +60,13 @@ export default function SecondaryDraw({}: Props) {
         )}
       </div>
       <div className="mt-2 flex w-full flex-col gap-2 px-4 md:px-2">
-        {isServerRoute && serverId && isAuthenticated ? (
+        {isMember && isAuthenticated ? (
           <ChannelList serverId={serverId} />
         ) : (
           <CategoryList />
         )}
       </div>
-      {isServerRoute && (
+      {isOwner && isAuthenticated && (
         <div className="group mb-4 mt-auto flex w-full items-center justify-center pt-2">
           <Button className="rounded-full md:px-8" onClick={onAddChannel}>
             <Plus className="h-4 w-4 md:h-5 md:w-5" />

@@ -2,7 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
+import {
+  Key,
+  LogOut,
+  RectangleEllipsis,
+  Settings,
+  UserCircle,
+} from "lucide-react";
 import NavbarTooltip from "../tooltips/navbar-tooltip";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
@@ -19,10 +25,11 @@ import {
   useLogoutMutation,
 } from "@/redux/features/account-slice";
 import { setIsloading, setLogout } from "@/redux/features/auth-slice";
-import ServerSettings from "../server-settings";
 import Logo from "../navbars/logo";
 import { ModeToggle } from "../mode-toggle";
 import { UserAvatar } from "../user-avatar";
+import { Button } from "../ui/button";
+import MobileSettings from "./mobile-settings";
 
 type Props = {};
 
@@ -90,18 +97,18 @@ export default function MobileNavbar({}: Props) {
   return (
     <div
       className={cn(
-        "flex h-[80px] w-full flex-col items-center gap-2 bg-zinc-200 py-4 dark:bg-zinc-800 sm:hidden",
+        "flex h-[56px] w-full flex-col items-center gap-2 bg-zinc-200 py-2 dark:bg-zinc-700 sm:hidden",
       )}
     >
       <div className="flex h-full w-full justify-start px-4">
-        <div className="flex gap-2">
-          <NavbarTooltip name="Go to homepage">
-            <div className="flex w-full justify-center">
-              <Logo />
-            </div>
-          </NavbarTooltip>
-          <div className={"flex w-full items-center gap-2"}>
-            <ServerSettings />
+        <div className="flex w-full items-center justify-between">
+          <Logo />
+          <div className="flex items-center gap-4">
+            <MobileSettings>
+              <Button className="rounded-full" size={`icon`} variant={`ghost`}>
+                <Settings className="h-4 w-4" />
+              </Button>
+            </MobileSettings>
             <ModeToggle variant={`ghost`} />
             <DropdownMenu>
               <DropdownMenuTrigger>

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { UserAvatar } from "../user-avatar";
 import { useGetServersQuery } from "@/redux/features/server-slice";
 import { useRouter, useSearchParams } from "next/navigation";
-import ServerTooltip from "../tooltips/sever-tooltip";
+import ServerTooltip from "../tooltips/server-tooltip";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
 import { toast } from "sonner";
