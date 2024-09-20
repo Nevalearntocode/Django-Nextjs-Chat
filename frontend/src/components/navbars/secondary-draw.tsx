@@ -19,10 +19,7 @@ export default function SecondaryDraw({}: Props) {
   const pathname = usePathname();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const isServerRoute =
-    pathname.startsWith("/servers") || pathname.startsWith("/channels");
   const serverId = pathname.split("/")[2];
-
 
   const { data: server } = useGetServerQuery(serverId);
 

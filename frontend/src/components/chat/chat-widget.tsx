@@ -30,7 +30,7 @@ export default function ChatWidget({ channelId }: Props) {
 
   useEffect(() => {
     scrollToBottom();
-  }, [channelId, newMessages]);
+  }, [channelId, newMessages, scrollToBottom]);
 
   useEffect(() => {
     setNewMessages(messages ?? []);

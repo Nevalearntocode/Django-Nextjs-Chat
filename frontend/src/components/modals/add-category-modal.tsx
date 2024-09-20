@@ -64,9 +64,11 @@ const AddCategoryModal = (props: Props) => {
     },
   });
 
+  const formDescription = form.watch("description");
+
   useEffect(() => {
     adjustHeight();
-  }, [form.watch("description")]);
+  }, [formDescription]);
 
   const isLoading = form.formState.isSubmitting;
 

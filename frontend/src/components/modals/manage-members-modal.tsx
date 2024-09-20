@@ -35,6 +35,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { toast } from "sonner";
+import Loading from "@/app/loading";
 
 type Props = {};
 
@@ -54,7 +55,7 @@ export default function ManageMembersModal({}: Props) {
   const [unbanFromServer] = useUnbanFromServerMutation();
   const dispatch = useAppDispatch();
 
-  if (!server || !server.members) return null;
+  if (!server || !server.members) return <Loading />;
   const onOpenChange = () => {
     dispatch(closeModal());
   };

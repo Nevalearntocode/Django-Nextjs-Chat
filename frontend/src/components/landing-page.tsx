@@ -12,6 +12,7 @@ import { openModal } from "@/redux/features/modal-slice";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
+import NotFound from "@/app/not-found";
 
 const LandingPage = ({ serverId }: { serverId: string }) => {
   const { data: server } = useGetServerQuery(serverId);
@@ -37,7 +38,7 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
     }
     if (server?.status === "private" && !invite_code) {
       toast.info("This server is private. Please provide an invite code.");
-      dispatch(openModal("server-join"));
+      dispatch(openModal("server-private-join"));
     }
     if (
       server?.status === "public" ||
@@ -67,7 +68,7 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
     }
   };
 
-  if (!server) return null;
+  if (!server) return <NotFound />;
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-8 md:justify-start">

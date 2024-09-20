@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import RootProvider from "@/components/providers/root-provider";
 import MobileNavbar from "@/components/mobile/mobile-navbar";
 import Navbar from "@/components/navbars/navbar";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,17 +27,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn("flex justify-center", inter.className)}>
         <RootProvider>
-          <div className="mx-auto flex h-full w-full max-w-none flex-col">
-            <MobileNavbar />
-            <div className="flex h-full w-full overflow-hidden">
-              <PrimaryDraw />
-              <Separator orientation="vertical" />
-              <SecondaryDraw />
-              <Separator orientation="vertical" />
-              {children}
-              <Navbar />
+          <Suspense fallback={<Loading />}>
+            <div className="mx-auto flex h-full w-full max-w-none flex-col">
+              <MobileNavbar />
+              <div className="flex h-full w-full overflow-hidden">
+                <PrimaryDraw />
+                <Separator orientation="vertical" />
+                <SecondaryDraw />
+                <Separator orientation="vertical" />
+                {children}
+                <Navbar />
+              </div>
             </div>
-          </div>
+          </Suspense>
         </RootProvider>
       </body>
     </html>

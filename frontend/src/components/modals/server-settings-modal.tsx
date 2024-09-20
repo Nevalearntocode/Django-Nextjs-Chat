@@ -85,13 +85,14 @@ const ServerSettingsModal = (props: Props) => {
       form.setValue("icon_file", server.icon);
       form.setValue("banner_file", server.banner);
     }
-  }, [server]);
+  }, [server, form]);
 
   const isLoading = form.formState.isSubmitting;
+  const formDescription = form.watch("description");
 
   useEffect(() => {
     adjustHeight();
-  }, [form.watch("description")]);
+  }, [formDescription]);
 
   const onSubmit = async (data: UpdateServerFormType) => {
     updateServer({ server: data, id: serverId })

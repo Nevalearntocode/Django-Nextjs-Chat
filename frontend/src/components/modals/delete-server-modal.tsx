@@ -18,6 +18,7 @@ import {
   useDeleteServerMutation,
 } from "@/redux/features/server-slice";
 import { toast } from "sonner";
+import Loading from "@/app/loading";
 type Props = {};
 
 export default function DeleteServerModal({}: Props) {
@@ -30,7 +31,7 @@ export default function DeleteServerModal({}: Props) {
   const [deleteServer] = useDeleteServerMutation();
   const router = useRouter();
 
-  if (!server) return null;
+  if (!server) return <Loading />;
 
   const onOpenChange = () => {
     dispatch(closeModal());

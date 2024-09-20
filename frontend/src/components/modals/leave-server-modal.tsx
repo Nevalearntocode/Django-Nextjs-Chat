@@ -18,6 +18,7 @@ import {
   useLeaveServerMutation,
 } from "@/redux/features/server-slice";
 import { toast } from "sonner";
+import Loading from "@/app/loading";
 type Props = {};
 
 export default function LeaveServerModal({}: Props) {
@@ -29,7 +30,7 @@ export default function LeaveServerModal({}: Props) {
   const dispatch = useAppDispatch();
   const [leaveServer] = useLeaveServerMutation();
 
-  if (!server) return null;
+  if (!server) return <Loading />;
 
   const onOpenChange = () => {
     dispatch(closeModal());

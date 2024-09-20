@@ -83,9 +83,11 @@ const AddServerModal = (props: Props) => {
     },
   });
 
+  const formDescription = form.watch("description");
+
   useEffect(() => {
     adjustHeight();
-  }, [form.watch("description")]);
+  }, [formDescription]);
 
   const onOpenChange = () => {
     dispatch(closeModal());
