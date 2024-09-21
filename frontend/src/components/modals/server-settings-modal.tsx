@@ -33,6 +33,8 @@ import {
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../image-upload";
 import { toast } from "sonner";
+import { useModal } from "@/hooks/use-modal";
+import { useServerId } from "@/hooks/use-server-id";
 
 type Props = {};
 
@@ -48,11 +50,10 @@ export type UpdateServerFormType = z.infer<
 >;
 
 const ServerSettingsModal = (props: Props) => {
-  const dispatch = useAppDispatch();
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "server-settings";
-  const pathname = usePathname();
-  const serverId = pathname.split("/")[2];
+  const { isModalOpen, onOpenChange } = useModal("server-settings");
+
+  const serverId = useServerId();
+
   const { data: server } = useGetServerQuery(serverId);
   const [updateServer] = useUpdateServerMutation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -62,10 +63,6 @@ const ServerSettingsModal = (props: Props) => {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  };
-
-  const onOpenChange = () => {
-    dispatch(closeModal());
   };
 
   const form = useForm<UpdateServerFormType>({

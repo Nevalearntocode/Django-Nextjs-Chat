@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type ModalState = {
+export type ModalState = {
   isOpen: boolean;
   type:
     | "mobile-sheet"

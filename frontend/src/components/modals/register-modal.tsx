@@ -31,6 +31,7 @@ import {
 } from "@/redux/features/account-slice";
 import { toast } from "sonner";
 import { setLogin } from "@/redux/features/auth-slice";
+import { useModal } from "@/hooks/use-modal";
 
 type Props = {};
 
@@ -43,15 +44,11 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const RegisterModal = (props: Props) => {
+  const { isModalOpen, onOpenChange } = useModal("register");
   const dispatch = useAppDispatch();
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "register";
+
   const [register] = useRegisterMutation();
   const [login] = useLoginMutation();
-
-  const onClose = () => {
-    dispatch(closeModal());
-  };
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -75,7 +72,7 @@ const RegisterModal = (props: Props) => {
     register(data)
       .unwrap()
       .then((res) => {
-        dispatch(closeModal());
+        onOpenChange();
         form.reset();
         toast.success("Account created successfully");
 
@@ -107,7 +104,7 @@ const RegisterModal = (props: Props) => {
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onClose}>
+    <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
       <DialogOverlay className="opacity-60">
         <DialogContent>
           <DialogHeader>

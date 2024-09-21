@@ -10,31 +10,24 @@ import {
   DialogContent,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { closeModal } from "@/redux/features/modal-slice";
-import { usePathname } from "next/navigation";
 import {
   useGetServerQuery,
   useLeaveServerMutation,
 } from "@/redux/features/server-slice";
 import { toast } from "sonner";
-import Loading from "@/app/loading";
+import { useModal } from "@/hooks/use-modal";
+import { useServerId } from "@/hooks/use-server-id";
 type Props = {};
 
 export default function LeaveServerModal({}: Props) {
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "server-leave";
-  const pathname = usePathname();
-  const serverId = pathname.split("/")[2];
+  const { isModalOpen, onOpenChange } = useModal("server-leave");
+  const serverId = useServerId();
+
   const { data: server } = useGetServerQuery(serverId);
-  const dispatch = useAppDispatch();
   const [leaveServer] = useLeaveServerMutation();
 
   if (!server) return null;
 
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
   const onConfirm = () => {
     leaveServer(server.id)
       .unwrap()

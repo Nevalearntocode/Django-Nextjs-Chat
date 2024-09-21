@@ -17,10 +17,10 @@ type Props = {};
 export default function ServerSettings({}: Props) {
   const pathname = usePathname();
   const serverId = pathname.split("/")[2];
+  const dispatch = useAppDispatch();
   const { data: server } = useGetServerQuery(serverId);
   const { data: currentUser } = useGetCurrentUserQuery();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
 
   if (!isAuthenticated) return null;
 

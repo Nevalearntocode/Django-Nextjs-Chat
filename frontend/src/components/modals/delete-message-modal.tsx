@@ -1,7 +1,6 @@
 "use client";
 
-import { closeModal } from "@/redux/features/modal-slice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 import React from "react";
 import {
   Dialog,
@@ -15,15 +14,13 @@ import { Button } from "../ui/button";
 import useWebSocket from "react-use-websocket";
 import { env } from "@/env";
 import { usePathname } from "next/navigation";
+import { useModal } from "@/hooks/use-modal";
 
 type Props = {};
 
 export default function DeleteMessageModal({}: Props) {
-  const dispatch = useAppDispatch();
-  const { deleteMessageId, type, isOpen } = useAppSelector(
-    (state) => state.modal,
-  );
-  const isModalOpen = isOpen && type === "delete-message";
+  const { isModalOpen, onOpenChange } = useModal("delete-message");
+  const { deleteMessageId } = useAppSelector((state) => state.modal);
   const pathname = usePathname();
   const channelId = pathname?.split("/")[4];
 
@@ -31,17 +28,13 @@ export default function DeleteMessageModal({}: Props) {
     `${env.NEXT_PUBLIC_WEBSOCKET_URL}${channelId}/`,
   );
 
-  const onModalClose = () => {
-    dispatch(closeModal());
-  };
-
   const onConfirm = () => {
     sendJsonMessage({ type: "delete", message: deleteMessageId });
-    onModalClose();
+    onOpenChange();
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onModalClose}>
+    <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
       <DialogOverlay className="opacity-60">
         <DialogContent>
           <DialogHeader>

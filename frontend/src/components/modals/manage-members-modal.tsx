@@ -36,29 +36,26 @@ import {
 } from "../ui/tooltip";
 import { toast } from "sonner";
 import Loading from "@/app/loading";
+import { useModal } from "@/hooks/use-modal";
+import { useServerId } from "@/hooks/use-server-id";
 
 type Props = {};
 
 export default function ManageMembersModal({}: Props) {
-  const { isOpen, type } = useAppSelector((state) => state.modal);
+  const { isModalOpen, onOpenChange } = useModal("server-members");
+  const serverId = useServerId();
+
   const [confirm, setConfirm] = useState<string>("");
   const [actionType, setActionType] = useState<"kick" | "ban" | "unban" | null>(
     null,
   );
-  const isModalOpen = isOpen && type === "server-members";
-  const pathname = usePathname();
-  const serverId = pathname.split("/")[2];
   const { data: server } = useGetServerQuery(serverId);
   const { data: user } = useGetCurrentUserQuery();
   const [kickFromServer] = useKickFromServerMutation();
   const [banFromServer] = useBanFromServerMutation();
   const [unbanFromServer] = useUnbanFromServerMutation();
-  const dispatch = useAppDispatch();
 
   if (!server || !server.members) return null;
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
 
   const onKick = (id: string) => {
     setActionType("kick");

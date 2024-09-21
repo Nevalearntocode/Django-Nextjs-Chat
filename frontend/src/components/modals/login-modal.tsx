@@ -23,11 +23,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { closeModal, openModal } from "@/redux/features/modal-slice";
 import { useLoginMutation } from "@/redux/features/account-slice";
 import { setLogin } from "@/redux/features/auth-slice";
 import { toast } from "sonner";
+import { useModal } from "@/hooks/use-modal";
 
 type Props = {};
 
@@ -39,14 +40,9 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const LoginModal = (props: Props) => {
-  const dispatch = useAppDispatch();
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "login";
+  const { isModalOpen, onOpenChange } = useModal("login");
   const [login] = useLoginMutation();
-
-  const onClose = () => {
-    dispatch(closeModal());
-  };
+  const dispatch = useAppDispatch();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -70,7 +66,7 @@ const LoginModal = (props: Props) => {
       .unwrap()
       .then((res) => {
         dispatch(setLogin(null));
-        dispatch(closeModal());
+        onOpenChange();
         form.reset();
       })
       .catch((err: any) => {
@@ -88,7 +84,7 @@ const LoginModal = (props: Props) => {
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onClose}>
+    <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
       <DialogOverlay className="opacity-60">
         <DialogContent>
           <DialogHeader>

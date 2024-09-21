@@ -23,12 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { closeModal } from "@/redux/features/modal-slice";
-import { usePathname, useSearchParams } from "next/navigation";
 import { useAddChannelMutation } from "@/redux/features/channel-slice";
 import { toast } from "sonner";
-import path from "path";
+import { useModal } from "@/hooks/use-modal";
+import { useServerId } from "@/hooks/use-server-id";
 
 type Props = {};
 
@@ -42,12 +40,13 @@ const formSchema = z.object({
 export type AddChannelForm = z.infer<typeof formSchema>;
 
 const AddChannelModal = (props: Props) => {
-  const dispatch = useAppDispatch();
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "channel";
-  const pathname = usePathname();
-  const server = pathname?.split("/")[2];
+  const { isModalOpen, onOpenChange } = useModal("channel");
+  const server = useServerId();
   const [addChannel] = useAddChannelMutation();
+
+  if (!server) {
+    return null;
+  }
 
   const form = useForm<AddChannelForm>({
     resolver: zodResolver(formSchema),
@@ -58,10 +57,6 @@ const AddChannelModal = (props: Props) => {
       server: server || "",
     },
   });
-
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
 
   const isLoading = form.formState.isSubmitting;
 

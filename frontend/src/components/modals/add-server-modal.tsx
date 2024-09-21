@@ -23,8 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { closeModal } from "@/redux/features/modal-slice";
 import { useGetCategoriesQuery } from "@/redux/features/category-slice";
 import { Textarea } from "../ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -42,6 +40,7 @@ import { Checkbox } from "../ui/checkbox";
 import ImageUpload from "../image-upload";
 import { useAddServerMutation } from "@/redux/features/server-slice";
 import { toast } from "sonner";
+import { useModal } from "@/hooks/use-modal";
 
 type Props = {};
 
@@ -57,10 +56,8 @@ const formSchema = z.object({
 export type ServerFormType = z.infer<typeof formSchema>;
 
 const AddServerModal = (props: Props) => {
-  const { isOpen, type } = useAppSelector((state) => state.modal);
+  const { isModalOpen, onOpenChange } = useModal("server");
   const { data: categories } = useGetCategoriesQuery({});
-  const isModalOpen = isOpen && type === "server";
-  const dispatch = useAppDispatch();
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const [addServer, { isLoading: isAddServerLoading }] = useAddServerMutation();
 
@@ -88,10 +85,6 @@ const AddServerModal = (props: Props) => {
   useEffect(() => {
     adjustHeight();
   }, [formDescription]);
-
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
 
   const isLoading = form.formState.isSubmitting;
 

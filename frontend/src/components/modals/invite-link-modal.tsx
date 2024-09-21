@@ -1,14 +1,11 @@
 "use client";
 
-import { closeModal } from "@/redux/features/modal-slice";
 import {
   useGetServerQuery,
   useRollInviteCodeMutation,
   useToggleStatusMutation,
 } from "@/redux/features/server-slice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Dialog } from "@radix-ui/react-dialog";
-import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -22,24 +19,20 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Copy, RefreshCcw } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
+import { useModal } from "@/hooks/use-modal";
+import { useServerId } from "@/hooks/use-server-id";
 
 type Props = {};
 
 export default function InviteLinkModal({}: Props) {
-  const dispatch = useAppDispatch();
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "invite-link";
+  const { isModalOpen, onOpenChange } = useModal("invite-link");
+  const serverId = useServerId();
+
   const [rollInviteCode] = useRollInviteCodeMutation();
   const [toggleStatus] = useToggleStatusMutation();
-  const pathname = usePathname();
-  const serverId = pathname.split("/")[2];
   const { data: server } = useGetServerQuery(serverId);
   const [isInviteCodeLoading, setisInviteCodeLoading] = useState(false);
   const [isCopiedLoading, setisCopiedLoading] = useState(false);
-
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
 
   const onRollInviteCode = () => {
     rollInviteCode(serverId)

@@ -24,11 +24,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { closeModal } from "@/redux/features/modal-slice";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../image-upload";
 import { useAddCategoryMutation } from "@/redux/features/category-slice";
 import { toast } from "sonner";
+import { useModal } from "@/hooks/use-modal";
 
 type Props = {};
 
@@ -41,7 +41,6 @@ const formSchema = z.object({
 export type FormType = z.infer<typeof formSchema>;
 
 const AddCategoryModal = (props: Props) => {
-  const { isOpen, type } = useAppSelector((state) => state.modal);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [addCategory] = useAddCategoryMutation();
   const adjustHeight = () => {
@@ -50,10 +49,7 @@ const AddCategoryModal = (props: Props) => {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
-
-  const dispatch = useAppDispatch();
-
-  const isModalOpen = isOpen && type === "category";
+  const { isModalOpen, onOpenChange } = useModal("category");
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -71,10 +67,6 @@ const AddCategoryModal = (props: Props) => {
   }, [formDescription]);
 
   const isLoading = form.formState.isSubmitting;
-
-  const onOpenChange = () => {
-    dispatch(closeModal());
-  };
 
   const onSubmit = (data: FormType) => {
     addCategory(data)

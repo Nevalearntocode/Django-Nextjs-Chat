@@ -23,10 +23,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { closeModal } from "@/redux/features/modal-slice";
 import { useChangePasswordMutation } from "@/redux/features/account-slice";
 import { toast } from "sonner";
+import { useModal } from "@/hooks/use-modal";
 
 type Props = {};
 
@@ -38,14 +37,8 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const ChangePasswordModal = (props: Props) => {
-  const { isOpen, type } = useAppSelector((state) => state.modal);
-  const isModalOpen = isOpen && type === "change-password";
-  const dispatch = useAppDispatch();
+  const { isModalOpen, onOpenChange } = useModal("change-password");
   const [changePassword] = useChangePasswordMutation();
-
-  const onClose = () => {
-    dispatch(closeModal());
-  };
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -63,7 +56,7 @@ const ChangePasswordModal = (props: Props) => {
     changePassword({ oldPassword, newPassword })
       .unwrap()
       .then(() => {
-        onClose();
+        onOpenChange();
         form.reset();
         toast.success("Password changed successfully");
       })
@@ -73,7 +66,7 @@ const ChangePasswordModal = (props: Props) => {
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onClose}>
+    <Dialog open={isModalOpen} onOpenChange={onOpenChange}>
       <DialogOverlay className="opacity-60">
         <DialogContent>
           <DialogHeader>
