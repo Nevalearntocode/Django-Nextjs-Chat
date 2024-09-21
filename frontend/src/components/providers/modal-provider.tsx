@@ -15,6 +15,7 @@ import DeleteMessageModal from "@/components/modals/delete-message-modal";
 import ChangePasswordModal from "@/components/modals/change-password-modal";
 import ServerSettingsModal from "@/components/modals/server-settings-modal";
 import JoinPrivateServerModal from "@/components/modals/join-private-server-modal";
+import EditChannelModal from "../modals/edit-channel-modal";
 
 export const ModalProvider = () => {
   const [isClient, setIsClient] = useState(false);
@@ -36,6 +37,7 @@ export const ModalProvider = () => {
       <AddChannelModal />
       <InviteLinkModal />
       <AddCategoryModal />
+      <EditChannelModal />
       <LeaveServerModal />
       <DeleteServerModal />
       <ManageMembersModal />

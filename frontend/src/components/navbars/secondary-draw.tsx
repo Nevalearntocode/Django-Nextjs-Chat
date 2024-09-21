@@ -5,26 +5,27 @@ import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
-import { usePathname } from "next/navigation";
 import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 import ChannelList from "./channel-list";
 import CategoryList from "./category-list";
 import { useGetServerQuery } from "@/redux/features/server-slice";
+import { useServerId } from "@/hooks/use-server-id";
 
 type Props = {};
 
 export default function SecondaryDraw({}: Props) {
   const dispatch = useAppDispatch();
   const { data: user } = useGetCurrentUserQuery();
-  const pathname = usePathname();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const serverId = pathname.split("/")[2];
+  const serverId = useServerId();
 
   const { data: server } = useGetServerQuery(serverId);
 
   const isMember =
-    server && server.members && server.members.find((member) => member.id === user?.id);
+    server &&
+    server.members &&
+    server.members.find((member) => member.id === user?.id);
 
   const isOwner = server && server.owner === user?.username;
 

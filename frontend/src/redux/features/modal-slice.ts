@@ -18,14 +18,17 @@ export type ModalState = {
     | "server-private-join"
     | "invite-link"
     | "delete-message"
+    | "edit-channel"
     | null;
   deleteMessageId: string | null;
+  editChannelId: string | null;
 };
 
 const initialState = {
   isOpen: false,
   type: null,
   deleteMessageId: null,
+  editChannelId: null,
 } as ModalState;
 
 const modalSlice = createSlice({
@@ -49,6 +52,15 @@ const modalSlice = createSlice({
     clearDeleteMessageId: (state) => {
       state.deleteMessageId = null;
     },
+    setEditChannelId: (
+      state,
+      action: { payload: ModalState["editChannelId"] },
+    ) => {
+      state.editChannelId = action.payload;
+    },
+    clearEditChannelId: (state) => {
+      state.editChannelId = null;
+    },
   },
 });
 
@@ -57,5 +69,7 @@ export const {
   closeModal,
   setDeleteMessageId,
   clearDeleteMessageId,
+  setEditChannelId,
+  clearEditChannelId,
 } = modalSlice.actions;
 export default modalSlice.reducer;

@@ -49,6 +49,22 @@ export const channelSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "channels", id: "list" }],
     }),
+    editChannel: builder.mutation<
+      Channel,
+      { id: string; name: string; description: string; topic: string }
+    >({
+      query: (channel) => ({
+        url: `/api/channels/${channel.id}/`,
+        method: "PUT",
+        body: {
+          name: channel.name,
+          description: channel.description,
+          topic: channel.topic,
+        },
+      }),
+      invalidatesTags: (channel) =>
+        channel ? [{ type: "channels", id: channel.id }] : [],
+    }),
   }),
 });
 
@@ -56,4 +72,5 @@ export const {
   useGetChannelsQuery,
   useGetChannelQuery,
   useAddChannelMutation,
+  useEditChannelMutation,
 } = channelSlice;

@@ -44,10 +44,7 @@ const AddChannelModal = (props: Props) => {
   const server = useServerId();
   const [addChannel] = useAddChannelMutation();
 
-  if (!server) {
-    return null;
-  }
-
+  
   const form = useForm<AddChannelForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,6 +54,10 @@ const AddChannelModal = (props: Props) => {
       server: server || "",
     },
   });
+  
+  if (!server) {
+    return null;
+  }
 
   const isLoading = form.formState.isSubmitting;
 
