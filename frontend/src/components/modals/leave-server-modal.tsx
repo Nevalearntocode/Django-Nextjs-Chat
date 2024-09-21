@@ -30,7 +30,7 @@ export default function LeaveServerModal({}: Props) {
   const dispatch = useAppDispatch();
   const [leaveServer] = useLeaveServerMutation();
 
-  if (!server) return <Loading />;
+  if (!server) return null;
 
   const onOpenChange = () => {
     dispatch(closeModal());

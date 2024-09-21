@@ -55,7 +55,7 @@ export default function ManageMembersModal({}: Props) {
   const [unbanFromServer] = useUnbanFromServerMutation();
   const dispatch = useAppDispatch();
 
-  if (!server || !server.members) return <Loading />;
+  if (!server || !server.members) return null;
   const onOpenChange = () => {
     dispatch(closeModal());
   };

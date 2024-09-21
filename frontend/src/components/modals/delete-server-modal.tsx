@@ -31,7 +31,7 @@ export default function DeleteServerModal({}: Props) {
   const [deleteServer] = useDeleteServerMutation();
   const router = useRouter();
 
-  if (!server) return <Loading />;
+  if (!server) return null;
 
   const onOpenChange = () => {
     dispatch(closeModal());

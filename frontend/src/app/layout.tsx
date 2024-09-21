@@ -26,20 +26,21 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("flex justify-center", inter.className)}>
+        {" "}
         <RootProvider>
-          <Suspense fallback={<Loading />}>
-            <div className="mx-auto flex h-full w-full max-w-none flex-col">
-              <MobileNavbar />
-              <div className="flex h-full w-full overflow-hidden">
+          <div className="mx-auto flex h-full w-full max-w-none flex-col">
+            <MobileNavbar />
+            <div className="flex h-full w-full overflow-hidden">
+              <Suspense fallback={<Loading />}>
                 <PrimaryDraw />
                 <Separator orientation="vertical" />
                 <SecondaryDraw />
                 <Separator orientation="vertical" />
                 {children}
-                <Navbar />
-              </div>
+              </Suspense>
+              <Navbar />
             </div>
-          </Suspense>
+          </div>
         </RootProvider>
       </body>
     </html>

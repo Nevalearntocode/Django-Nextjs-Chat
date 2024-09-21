@@ -13,12 +13,12 @@ export default function RootProvider({
 }) {
   return (
     <ThemeProvider attribute="class">
-      <ReduxProvider>
-        <ModalProvider />
-        <AuthProvider />
-        <Toaster />
-        {children}
-      </ReduxProvider>
+        <ReduxProvider>
+          <ModalProvider />
+          <AuthProvider />
+          <Toaster />
+          {children}
+        </ReduxProvider>
     </ThemeProvider>
   );
 }

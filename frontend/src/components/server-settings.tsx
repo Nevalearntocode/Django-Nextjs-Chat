@@ -11,7 +11,6 @@ import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ServerSettingsOption from "./server-settings-option";
 import { openModal } from "@/redux/features/modal-slice";
-import Loading from "@/app/loading";
 
 type Props = {};
 
@@ -23,7 +22,7 @@ export default function ServerSettings({}: Props) {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
-  if (!isAuthenticated) return <Loading />;
+  if (!isAuthenticated) return null;
 
   const isOwner = server && server.owner === currentUser?.username;
   const isMember =
