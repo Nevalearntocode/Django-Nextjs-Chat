@@ -8,6 +8,7 @@ import Image from "next/image";
 import { env } from "@/env";
 import { MessageDisplay } from "./message-display";
 import { MessageInput } from "./message-input";
+import Loading from "@/app/loading";
 
 type Props = {
   channelId: string;
@@ -82,7 +83,7 @@ export default function ChatWidget({ channelId }: Props) {
   };
 
   if (!channel || isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

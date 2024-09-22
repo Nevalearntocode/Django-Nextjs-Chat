@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Pencil, Trash } from "lucide-react";
 import { format } from "date-fns";
@@ -6,6 +8,7 @@ import { openModal, setDeleteMessageId } from "@/redux/features/modal-slice";
 import { Message } from "@/redux/features/message-slice";
 import { UserAvatar } from "../user-avatar";
 import { Button } from "../ui/button";
+import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 
 type Props = {
   message: Message;
@@ -14,9 +17,21 @@ type Props = {
 
 export const MessageDisplay = ({ message, onEdit }: Props) => {
   const dispatch = useAppDispatch();
+  const { data: user } = useGetCurrentUserQuery();
 
   const formatDate = (timestamp: string) => {
     return format(new Date(timestamp), "h:mm a MM/dd/yyyy");
+  };
+
+  const formattedDates = (created: string, edited: string) => {
+    const formattedCreate = formatDate(created);
+    const formattedEdit = formatDate(edited);
+
+    if (formattedCreate === formattedEdit) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -34,27 +49,31 @@ export const MessageDisplay = ({ message, onEdit }: Props) => {
           <p className="ml-2 text-sm">{message.content}</p>
           <div className="absolute right-0 top-0 hidden items-center gap-2 group-hover:flex">
             <p className="mr-2 hidden text-xs italic group-hover:block">
-              {formatDate(message.created)}{" "}
-              {message.created !== message.edited &&
+              {`At ${formatDate(message.created)}`}{" "}
+              {!formattedDates(message.created, message.edited) &&
                 `Edited ${formatDate(message.edited)}`}
             </p>
-            <Button
-              size={`icon`}
-              variant={`secondary`}
-              onClick={() => onEdit(message.id)}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              size={`icon`}
-              variant={`destructive`}
-              onClick={() => {
-                dispatch(openModal("delete-message"));
-                dispatch(setDeleteMessageId(message.id));
-              }}
-            >
-              <Trash className="h-4 w-4" />
-            </Button>
+            {user?.username === message.sender && (
+              <>
+                <Button
+                  size={`icon`}
+                  variant={`secondary`}
+                  onClick={() => onEdit(message.id)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  size={`icon`}
+                  variant={`destructive`}
+                  onClick={() => {
+                    dispatch(openModal("delete-message"));
+                    dispatch(setDeleteMessageId(message.id));
+                  }}
+                >
+                  <Trash className="h-4 w-4" />
+                </Button>
+              </>
+            )}
           </div>
         </>
       )}

@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
+import EmojiPicker from "./emoji-picker";
 
 type Props = {
   message: string;
@@ -46,7 +47,7 @@ export const MessageInput = ({
 
   return (
     <div className="relative flex flex-shrink-0 gap-4 py-4 pl-6 pr-[72px]">
-      <div className="flex w-full flex-col">
+      <div className="relative flex w-full flex-col">
         {type === "edit" && (
           <div className="flex h-[16px] w-full -skew-x-12 items-center justify-between rounded-md bg-zinc-700 px-4">
             <p className="text-xs italic">Editing</p>
@@ -69,6 +70,11 @@ export const MessageInput = ({
           rows={1}
           onKeyDown={handleKeyDown}
         />
+        <div className="absolute bottom-0 right-0">
+          <EmojiPicker
+            onChange={(emoji: string) => onMessageChange(`${message} ${emoji}`)}
+          />
+        </div>
       </div>
       <Button
         onClick={onSendMessage}

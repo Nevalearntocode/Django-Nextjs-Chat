@@ -42,19 +42,11 @@ export default function PopularServers({}: Props) {
         </div>
         <div className="hidden gap-4 sm:flex">
           <CategoryList />
-          <CategoryList />
-          <CategoryList />
         </div>
       </div>
       <div className="mt-4 flex flex-col gap-4 transition-all duration-300 ease-in-out md:mt-8 lg:mt-12">
         <p className="text-lg font-semibold">Recommended servers</p>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-          {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
-          {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
-          {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
-          {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
-          {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
-          {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
           {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
         </div>
       </div>
