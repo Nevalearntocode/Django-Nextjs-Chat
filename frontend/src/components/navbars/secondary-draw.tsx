@@ -10,6 +10,7 @@ import ChannelList from "./channel-list";
 import CategoryList from "./category-list";
 import { useGetServerQuery } from "@/redux/features/server-slice";
 import { useServerId } from "@/hooks/use-server-id";
+import { usePathname } from "next/navigation";
 
 type Props = {};
 
@@ -19,6 +20,7 @@ export default function SecondaryDraw({}: Props) {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const serverId = useServerId();
+  const pathname = usePathname();
 
   const { data: server } = useGetServerQuery(serverId);
 
@@ -29,6 +31,10 @@ export default function SecondaryDraw({}: Props) {
 
   const isOwner = server && server.owner === user?.username;
 
+  console.log(isOwner);
+  console.log(server?.owner);
+  console.log(user?.username);
+  console.log(server);
   const onAddCategory = () => {
     dispatch(openModal("category"));
   };
@@ -47,7 +53,7 @@ export default function SecondaryDraw({}: Props) {
         <p className={cn("hidden text-lg font-bold md:block")}>
           {isMember && isAuthenticated && server ? "Channels" : "Explore"}
         </p>{" "}
-        {user?.is_staff && isAuthenticated && (
+        {user?.is_staff && isAuthenticated && !serverId && (
           <Button
             className="rounded-full"
             size={"icon"}
@@ -59,13 +65,13 @@ export default function SecondaryDraw({}: Props) {
         )}
       </div>
       <div className="mt-2 flex w-full flex-col gap-2 px-4 md:px-2">
-        {isMember && isAuthenticated ? (
+        {isMember && isAuthenticated && pathname != "/" ? (
           <ChannelList serverId={serverId} />
         ) : (
           <CategoryList />
         )}
       </div>
-      {isOwner && isAuthenticated && (
+      {isOwner && isAuthenticated && pathname != "/" && (
         <div className="group mb-4 mt-auto flex w-full items-center justify-center pt-2">
           <Button className="rounded-full md:px-8" onClick={onAddChannel}>
             <Plus className="h-4 w-4 md:h-5 md:w-5" />
