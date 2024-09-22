@@ -5,12 +5,14 @@ import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import { useServerId } from "@/hooks/use-server-id";
 import MobileChannelList from "./mobile-channel-list";
+import { useAppSelector } from "@/redux/hooks";
 
 type Props = {};
 
 export default function ChannelDrawerSheet({}: Props) {
   const { isModalOpen, onOpenChange } = useModal("channel-mobile-sheet");
   const serverId = useServerId();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   return (
     <Sheet open={isModalOpen} onOpenChange={onOpenChange}>
@@ -22,7 +24,16 @@ export default function ChannelDrawerSheet({}: Props) {
         <SheetHeader>
           <SheetTitle className="text-left font-bold">Channels</SheetTitle>
         </SheetHeader>
-        <MobileChannelList serverId={serverId} />
+        {isAuthenticated ? (
+          <MobileChannelList serverId={serverId} />
+        ) : (
+          <div className="flex flex-col">
+            <p className="text-sm">
+              You are not a member of this server, try logging in or join the
+              server.
+            </p>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

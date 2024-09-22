@@ -122,7 +122,7 @@ export default function MobileNavbar({}: Props) {
         <div className="flex w-full items-center justify-between">
           <Logo />
           <div className="flex items-center gap-4">
-            {isOwner ? (
+            {isOwner && isAuthenticated ? (
               <>
                 <MobileManageMembers>
                   <Button
