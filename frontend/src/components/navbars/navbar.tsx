@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 import { Key, LogOut, RectangleEllipsis, UserCircle } from "lucide-react";
-import NavbarTooltip from "../tooltips/navbar-tooltip";
+import GeneralTooltip from "../tooltips/general-tooltip";
 import Logo from "./logo";
 import { ModeToggle } from "../mode-toggle";
 import { UserAvatar } from "../user-avatar";
@@ -95,11 +95,11 @@ export default function Navbar({}: Props) {
     >
       <div className="500 flex h-full w-full justify-center">
         <div className="container flex flex-col gap-4">
-          <NavbarTooltip name="Go to homepage">
+          <GeneralTooltip name="Go to homepage">
             <div className="flex w-full justify-center">
               <Logo />
             </div>
-          </NavbarTooltip>
+          </GeneralTooltip>
           <div className={"flex w-full flex-col items-center gap-4"}>
             <ModeToggle />
             <DropdownMenu>

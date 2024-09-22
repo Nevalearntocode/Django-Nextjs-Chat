@@ -30,11 +30,6 @@ export default function SecondaryDraw({}: Props) {
     server.members.find((member) => member.id === user?.id);
 
   const isOwner = server && server.owner === user?.username;
-
-  console.log(isOwner);
-  console.log(server?.owner);
-  console.log(user?.username);
-  console.log(server);
   const onAddCategory = () => {
     dispatch(openModal("category"));
   };
@@ -65,11 +60,7 @@ export default function SecondaryDraw({}: Props) {
         )}
       </div>
       <div className="mt-2 flex w-full flex-col gap-2 px-4 md:px-2">
-        {isMember && isAuthenticated && pathname != "/" ? (
-          <ChannelList serverId={serverId} />
-        ) : (
-          <CategoryList />
-        )}
+        <ChannelList serverId={serverId} />
       </div>
       {isOwner && isAuthenticated && pathname != "/" && (
         <div className="group mb-4 mt-auto flex w-full items-center justify-center pt-2">

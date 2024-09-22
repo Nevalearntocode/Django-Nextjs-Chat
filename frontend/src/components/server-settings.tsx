@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import React from "react";
 import { LogOut, MessageCircle, Settings, Trash2, Users2 } from "lucide-react";
-import NavbarTooltip from "./tooltips/navbar-tooltip";
+import GeneralTooltip from "./tooltips/general-tooltip";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useGetServerQuery } from "@/redux/features/server-slice";
@@ -60,7 +60,7 @@ export default function ServerSettings({}: Props) {
               <Settings className="h-4 w-4" />
             </Button>
           </ServerSettingsOption>
-          <NavbarTooltip name="Channels">
+          <GeneralTooltip name="Channels">
             <Button
               className="rounded-full"
               size={`icon`}
@@ -68,8 +68,8 @@ export default function ServerSettings({}: Props) {
             >
               <MessageCircle className="h-4 w-4" />
             </Button>
-          </NavbarTooltip>
-          <NavbarTooltip name="Members">
+          </GeneralTooltip>
+          <GeneralTooltip name="Members">
             <Button
               className="rounded-full"
               size={`icon`}
@@ -77,9 +77,9 @@ export default function ServerSettings({}: Props) {
             >
               <Users2 className="h-4 w-4" />
             </Button>
-          </NavbarTooltip>
+          </GeneralTooltip>
 
-          <NavbarTooltip name="Delete">
+          <GeneralTooltip name="Delete">
             <Button
               className="rounded-full"
               size={`icon`}
@@ -88,12 +88,12 @@ export default function ServerSettings({}: Props) {
             >
               <Trash2 className="h-4 w-4" />
             </Button>
-          </NavbarTooltip>
+          </GeneralTooltip>
         </>
       ) : (
         <>
           {isMember && (
-            <NavbarTooltip name="Leave">
+            <GeneralTooltip name="Leave">
               <Button
                 className="rounded-full"
                 size={`icon`}
@@ -102,7 +102,7 @@ export default function ServerSettings({}: Props) {
               >
                 <LogOut className="h-4 w-4" />
               </Button>
-            </NavbarTooltip>
+            </GeneralTooltip>
           )}
         </>
       )}

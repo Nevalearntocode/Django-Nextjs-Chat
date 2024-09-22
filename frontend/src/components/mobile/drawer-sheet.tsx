@@ -80,42 +80,6 @@ export default function DrawerSheet({}: Props) {
             ))}
           </div>
         </div>
-        <div>
-          <SheetHeader>
-            <SheetTitle className="text-left font-bold">
-              Popular servers
-            </SheetTitle>
-          </SheetHeader>
-          <div
-            className={cn(
-              "mt-3 flex w-full flex-col gap-2",
-              // open && "px-4"
-            )}
-          >
-            {/* TODO: make this a separate component later */}
-            {servers?.map((server) => (
-              <div
-                className={cn(
-                  "flex items-center gap-4 rounded-lg p-4",
-                  // open &&
-                  "bg-muted-foreground/20 hover:bg-muted-foreground/40",
-                )}
-                key={server.id}
-              >
-                <UserAvatar name={server.name} image={server.banner} />
-                <div
-                  className={cn(
-                    "flex-col",
-                    // open ? "lg:flex" : "hidden"
-                  )}
-                >
-                  <p className="text-lg font-semibold">{server.name}</p>
-                  <p className="text-sm font-light">{server.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </SheetContent>
     </Sheet>
   );

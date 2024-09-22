@@ -9,7 +9,7 @@ import {
   Settings,
   UserCircle,
 } from "lucide-react";
-import NavbarTooltip from "../tooltips/navbar-tooltip";
+import GeneralTooltip from "../tooltips/general-tooltip";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
 import {
@@ -30,6 +30,7 @@ import { ModeToggle } from "../mode-toggle";
 import { UserAvatar } from "../user-avatar";
 import { Button } from "../ui/button";
 import MobileSettings from "./mobile-settings";
+import { useServerId } from "@/hooks/use-server-id";
 
 type Props = {};
 
@@ -38,6 +39,7 @@ export default function MobileNavbar({}: Props) {
   const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
   const [logout] = useLogoutMutation();
   const { data: user } = useGetCurrentUserQuery();
+  const serverId = useServerId();
 
   const handleLogout = () => {
     dispatch(setIsloading(true));
@@ -104,11 +106,17 @@ export default function MobileNavbar({}: Props) {
         <div className="flex w-full items-center justify-between">
           <Logo />
           <div className="flex items-center gap-4">
-            <MobileSettings>
-              <Button className="rounded-full" size={`icon`} variant={`ghost`}>
-                <Settings className="h-4 w-4" />
-              </Button>
-            </MobileSettings>
+            {serverId && (
+              <MobileSettings>
+                <Button
+                  className="rounded-full"
+                  size={`icon`}
+                  variant={`ghost`}
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </MobileSettings>
+            )}
             <ModeToggle variant={`ghost`} />
             <DropdownMenu>
               <DropdownMenuTrigger>

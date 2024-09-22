@@ -14,7 +14,7 @@ type Props = {
   name: string;
 };
 
-export default function NavbarTooltip({ children, name }: Props) {
+export default function GeneralTooltip({ children, name }: Props) {
   return (
     <TooltipProvider>
       <Tooltip>

@@ -34,8 +34,6 @@ export default function RootLayout({
               <Suspense fallback={<Loading />}>
                 <PrimaryDraw />
                 <Separator orientation="vertical" />
-                <SecondaryDraw />
-                <Separator orientation="vertical" />
                 {children}
               </Suspense>
               <Navbar />
