@@ -31,10 +31,10 @@ export default function PopularServers({}: Props) {
     <div className="h-full w-full overflow-auto px-6 pt-4">
       <div className="flex justify-between">
         <div className="flex flex-col gap-1 pt-1">
-          <p className="text-4xl font-bold">
+          <p className="text-2xl font-bold md:text-3xl xl:text-4xl">
             {category_param ? categories?.[0].name : "Popular servers"}
           </p>
-          <p className="font-semibold text-muted-foreground">
+          <p className="text-xs font-semibold text-muted-foreground md:text-base">
             {category_param
               ? categories?.[0].description
               : "Servers recommended for you."}
@@ -45,7 +45,6 @@ export default function PopularServers({}: Props) {
         </div>
       </div>
       <div className="mt-4 flex flex-col gap-4 transition-all duration-300 ease-in-out md:mt-8 lg:mt-12">
-        <p className="text-lg font-semibold">Recommended servers</p>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
         </div>

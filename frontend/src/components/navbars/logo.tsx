@@ -6,12 +6,18 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
+import { useServerId } from "@/hooks/use-server-id";
 
 const Logo = () => {
   const dispatch = useAppDispatch();
+  const serverId = useServerId();
 
   const onMenuClick = () => {
-    dispatch(openModal("mobile-sheet"));
+    if (serverId) {
+      dispatch(openModal("channel-mobile-sheet"));
+    } else {
+      dispatch(openModal("category-mobile-sheet"));
+    }
   };
 
   return (

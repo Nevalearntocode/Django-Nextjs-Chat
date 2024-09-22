@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export type ModalState = {
   isOpen: boolean;
   type:
-    | "mobile-sheet"
+    | "category-mobile-sheet"
+    | "channel-mobile-sheet"
     | "login"
     | "register"
     | "change-password"

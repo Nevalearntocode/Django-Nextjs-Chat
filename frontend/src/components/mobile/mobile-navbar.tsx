@@ -1,15 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { use } from "react";
 import {
   Key,
   LogOut,
   RectangleEllipsis,
   Settings,
   UserCircle,
+  Users2,
 } from "lucide-react";
-import GeneralTooltip from "../tooltips/general-tooltip";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { openModal } from "@/redux/features/modal-slice";
 import {
@@ -31,6 +31,9 @@ import { UserAvatar } from "../user-avatar";
 import { Button } from "../ui/button";
 import MobileSettings from "./mobile-settings";
 import { useServerId } from "@/hooks/use-server-id";
+import MobileManageMembers from "./mobile-manage-members";
+import { useGetServerQuery } from "@/redux/features/server-slice";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -40,12 +43,15 @@ export default function MobileNavbar({}: Props) {
   const [logout] = useLogoutMutation();
   const { data: user } = useGetCurrentUserQuery();
   const serverId = useServerId();
+  const { data: server } = useGetServerQuery(serverId);
+  const router = useRouter();
 
   const handleLogout = () => {
     dispatch(setIsloading(true));
     logout()
       .unwrap()
       .then(() => {
+        router.push("/"); 
         dispatch(setLogout());
       })
       .catch((err) => {
@@ -54,6 +60,16 @@ export default function MobileNavbar({}: Props) {
       .finally(() => {
         dispatch(setIsloading(false));
       });
+  };
+
+  const isOwner = server && server.owner === user?.username;
+  const isMember =
+    server &&
+    server.members &&
+    server.members.find((member) => member.id === user?.id);
+
+  const onLeaveServerClick = () => {
+    dispatch(openModal("server-leave"));
   };
 
   const renderDropdownMenuItems = () => {
@@ -106,16 +122,40 @@ export default function MobileNavbar({}: Props) {
         <div className="flex w-full items-center justify-between">
           <Logo />
           <div className="flex items-center gap-4">
-            {serverId && (
-              <MobileSettings>
-                <Button
-                  className="rounded-full"
-                  size={`icon`}
-                  variant={`ghost`}
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </MobileSettings>
+            {isOwner ? (
+              <>
+                <MobileManageMembers>
+                  <Button
+                    className="rounded-full"
+                    size={`icon`}
+                    variant={`ghost`}
+                  >
+                    <Users2 className="h-4 w-4" />
+                  </Button>
+                </MobileManageMembers>
+                <MobileSettings>
+                  <Button
+                    className="rounded-full"
+                    size={`icon`}
+                    variant={`ghost`}
+                  >
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </MobileSettings>
+              </>
+            ) : (
+              <>
+                {isMember && (
+                  <Button
+                    size={`icon`}
+                    variant={`destructive`}
+                    className="rounded-full"
+                    onClick={onLeaveServerClick}
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                )}
+              </>
             )}
             <ModeToggle variant={`ghost`} />
             <DropdownMenu>
