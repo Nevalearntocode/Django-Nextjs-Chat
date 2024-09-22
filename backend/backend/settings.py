@@ -106,7 +106,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse(getenv("DATABASE_URL"))
+# DATABASES["default"] = dj_database_url.parse(getenv("DATABASE_URL"))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -189,7 +189,8 @@ CHANNEL_LAYERS = {
         "PASSWORD": "c7gxxsLue85DFAw2SNe2lpbh9XxpUSLi",
         "CONFIG": {
             "hosts": [
-                f"redis://{getenv('REDIS_USER')}:{getenv('REDIS_PASSWORD')}@{getenv('REDIS_HOST')}:{getenv('REDIS_PORT')}/0"
+                # f"redis://{getenv('REDIS_USER')}:{getenv('REDIS_PASSWORD')}@{getenv('REDIS_HOST')}:{getenv('REDIS_PORT')}/0",
+                ("redis", 6379),
             ],
         },
     },

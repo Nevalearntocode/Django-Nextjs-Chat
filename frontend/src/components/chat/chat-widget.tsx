@@ -40,6 +40,12 @@ export default function ChatWidget({ channelId }: Props) {
   const { sendJsonMessage } = useWebsocket(
     `${env.NEXT_PUBLIC_WEBSOCKET_URL}${channelId}/`,
     {
+      onOpen: () => {
+        console.log("connected");
+      },
+      onError: (error) => {
+        console.log(error);
+      },
       onMessage: (event) => {
         const data = JSON.parse(event.data);
         if (data.type === "send") {

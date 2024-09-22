@@ -17,12 +17,13 @@ import {
 import { toast } from "sonner";
 import { useModal } from "@/hooks/use-modal";
 import { useServerId } from "@/hooks/use-server-id";
+import { useRouter } from "next/navigation";
 type Props = {};
 
 export default function LeaveServerModal({}: Props) {
   const { isModalOpen, onOpenChange } = useModal("server-leave");
   const serverId = useServerId();
-
+  const router = useRouter()
   const { data: server } = useGetServerQuery(serverId);
   const [leaveServer] = useLeaveServerMutation();
 
@@ -34,6 +35,7 @@ export default function LeaveServerModal({}: Props) {
       .then(() => {
         onOpenChange();
         toast.success(`You have left ${server.name} server.`);
+        router.push("/")
       })
       .catch((err: any) => {
         if (err.data) {
