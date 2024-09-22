@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from os import getenv, path
-from datetime import timedelta
+import dj_database_url
 import dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,20 +96,17 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "test": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
     "default": {
-        "ENGINE": getenv("SQL_ENGINE"),
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": getenv("SQL_DATABASE"),
         "USER": getenv("DOCKER_SQL_USER"),
         "PASSWORD": getenv("DOCKER_SQL_PASSWORD"),
         "HOST": getenv("DOCKER_SQL_HOST"),
-        "PORT": getenv("DOCKER_SQL_PORT"),
-    },
+        "PORT": getenv("5432"),
+    }
 }
 
+DATABASES["default"] = dj_database_url.parse(getenv("DATABASE_URL"))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -183,14 +181,20 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": True,
 }
 
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "USER": "default",
+        "PASSWORD": "c7gxxsLue85DFAw2SNe2lpbh9XxpUSLi",
         "CONFIG": {
-            "hosts": [("redis", 6379)],
+            "hosts": [
+                f"redis://{getenv('REDIS_USER')}:{getenv('REDIS_PASSWORD')}@{getenv('REDIS_HOST')}:{getenv('REDIS_PORT')}/0"
+            ],
         },
     },
 }
+
 
 CLOUDFLARE_R2_ACCESS_KEY_ID = getenv("CLOUDFLARE_R2_ACCESS_KEY_ID")
 CLOUDFLARE_R2_SECRET_ACCESS_KEY = getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
