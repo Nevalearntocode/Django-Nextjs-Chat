@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from category.models import Category
 from category.serializers import CategorySerializer
 from category.permissions import CategoryPermission
+from category.schemas import list_category_docs
 
 
 class CategoryViewSet(ModelViewSet):
@@ -18,3 +19,7 @@ class CategoryViewSet(ModelViewSet):
             queryset = queryset.filter(name__icontains=name)
 
         return queryset
+
+    @list_category_docs
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

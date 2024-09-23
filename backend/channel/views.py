@@ -3,7 +3,6 @@ from channel.models import Channel
 from channel.serializers import ChannelSerializer
 from channel.permissions import ChannelPermission
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
 from rest_framework.response import Response
 
 

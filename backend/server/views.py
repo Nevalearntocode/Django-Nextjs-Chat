@@ -71,6 +71,21 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
         serializer_class=ServerMemberActionSerializer,
     )
     def kick(self, request, pk=None, *args, **kwargs):
+        """
+        Kick members from the server.
+
+        This endpoint will kick the members passed in the request body from the server.
+        The request body should contain a list of member ids to kick.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
         return self.perform_kick_or_ban_or_unban(request, "kick", "kicked")
 
     @action(
@@ -79,6 +94,22 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
         serializer_class=ServerMemberActionSerializer,
     )
     def ban(self, request, pk=None, *args, **kwargs):
+        """
+        Ban members from the server.
+
+        This endpoint will ban the members passed in the request body from the server.
+        The request body should contain a list of member ids to ban.
+        Banned members will not be able to join the server.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
         return self.perform_kick_or_ban_or_unban(request, "ban", "banned")
 
     @action(
@@ -87,6 +118,22 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
         serializer_class=ServerMemberActionSerializer,
     )
     def unban(self, request, pk=None, *args, **kwargs):
+        """
+        Unban members from the server.
+
+        This endpoint will unban the members passed in the request body from the server.
+        The request body should contain a list of member ids to unban.
+        Unbanned members will be able to join the server again.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
         return self.perform_kick_or_ban_or_unban(request, "unban", "unbanned")
 
     @action(
@@ -96,6 +143,21 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
         permission_classes=[IsAuthenticated],
     )
     def join(self, request, pk=None, *args, **kwargs):
+        """
+        Join a server.
+
+        This endpoint will add the current user to the server with the given primary key.
+        The request body should not contain any data.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
         return self.perform_join_or_leave(request, "join", "joined")
 
     @action(
@@ -105,16 +167,63 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
         permission_classes=[IsAuthenticated],
     )
     def leave(self, request, pk=None, *args, **kwargs):
+        """
+        Leave a server.
+
+        This endpoint will remove the current user from the server with the given primary key.
+        The request body should not contain any data.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
+
         return self.perform_join_or_leave(request, "leave", "left")
 
     @action(detail=True, methods=["POST"], serializer_class=ServerActionSerializer)
     def roll_invite_code(self, request, pk=None, *args, **kwargs):
+        """
+        Roll the invite code of a server.
+
+        This endpoint will roll the invite code of the server with the given primary key.
+        The request body should not contain any data.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
+
         return self.perform_roll_invite_code_or_toggle_status(
             request, "roll_invite_code", "Rolled the invite code."
         )
 
     @action(detail=True, methods=["POST"], serializer_class=ServerActionSerializer)
     def toggle_status(self, request, pk=None, *args, **kwargs):
+        """
+        Toggle the status of a server.
+
+        This endpoint will toggle the status of the server with the given primary key.
+        The request body should not contain any data.
+
+        Args:
+            request (Request): The request object
+            pk (str): The primary key of the server
+            *args (): Additional arguments
+            **kwargs (): Additional keyword arguments
+
+        Returns:
+            Response: A response object with the result of the action
+        """
         return self.perform_roll_invite_code_or_toggle_status(
             request, "toggle_status", "Toggled the server status."
         )
