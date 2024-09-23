@@ -13,6 +13,7 @@ from server.schema import list_server_docs
 from server.permissions import ServerPermission
 from server.mixins import AdditionalMixins
 from rest_framework.decorators import action
+from django.db.models import Count
 
 
 class ServerViewSet(ModelViewSet, AdditionalMixins):
@@ -45,6 +46,9 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
             except:
                 pass
 
+        queryset = queryset.annotate(amount_members=Count("members")).order_by(
+            "-amount_members"
+        )
         return queryset
 
     @list_server_docs

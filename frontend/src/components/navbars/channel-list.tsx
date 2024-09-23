@@ -16,12 +16,14 @@ import {
 import { useAppDispatch } from "@/redux/hooks";
 import { openModal, setEditChannelId } from "@/redux/features/modal-slice";
 import useIsOwner from "@/hooks/use-owner";
+import { toast } from "sonner";
 
 type Props = {
   serverId: string;
+  isMember: boolean;
 };
 
-export default function ChannelList({ serverId }: Props) {
+export default function ChannelList({ serverId, isMember }: Props) {
   const { data: channels } = useGetChannelsQuery({
     serverId,
   });
@@ -40,6 +42,14 @@ export default function ChannelList({ serverId }: Props) {
 
   const router = useRouter();
 
+  const onChannelClick = (channelId: string) => {
+    if (!isMember) {
+      toast.info("You need to be a member of this server first.");
+      return;
+    }
+    router.push(`/servers/${serverId}/channels/${channelId}`);
+  };
+
   return (
     <>
       {channels?.map((channel) => (
@@ -49,9 +59,7 @@ export default function ChannelList({ serverId }: Props) {
             false ? "bg-muted-foreground/10 hover:bg-muted-foreground/40" : "",
           )}
           key={channel.id}
-          onClick={() => {
-            router.push(`/servers/${serverId}/channels/${channel.id}`);
-          }}
+          onClick={() => onChannelClick(channel.id)}
         >
           <UserAvatar name={channel.name ?? "else"} />
 

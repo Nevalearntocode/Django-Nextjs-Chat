@@ -25,7 +25,8 @@ const baseQueryWithReauth: BaseQueryFn<
     result.error &&
     (result.error.status === 401 ||
       result.error.status === 400 ||
-      result.error.status === 404)
+      result.error.status === 404 ||
+      result.error.status === 403)
   ) {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();

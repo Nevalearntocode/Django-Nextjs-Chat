@@ -6,14 +6,12 @@ import { useSearchParams } from "next/navigation";
 import { useGetCategoriesQuery } from "@/redux/features/category-slice";
 import ServerCard from "./server-card";
 import { Button } from "./ui/button";
-import {
-  Airplay,
-  Building,
-  CircuitBoard,
-  Computer,
-  DollarSign,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import CategoryList from "./navbars/category-list";
+import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { openModal } from "@/redux/features/modal-slice";
+import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 
 type Props = {};
 
@@ -23,9 +21,12 @@ export default function PopularServers({}: Props) {
   const { data: servers } = useGetServersQuery({
     category: category_param ?? undefined,
   });
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { data: currentUser } = useGetCurrentUserQuery();
   const { data: categories } = useGetCategoriesQuery({
     name: category_param ?? undefined,
   });
+  const dispatch = useAppDispatch();
 
   return (
     <div className="h-full w-full overflow-auto px-6 pt-4">
@@ -41,11 +42,20 @@ export default function PopularServers({}: Props) {
           </p>
         </div>
         <div className="hidden gap-4 sm:flex">
+          {currentUser?.is_staff && isAuthenticated && (
+            <Button
+              size={`icon`}
+              className={cn("rounded-full")}
+              onClick={() => dispatch(openModal("category"))}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          )}
           <CategoryList />
         </div>
       </div>
       <div className="mt-4 flex flex-col gap-4 transition-all duration-300 ease-in-out md:mt-8 lg:mt-12">
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-12 sm:grid-cols-4 lg:grid-cols-6">
           {servers?.map((server) => <ServerCard {...server} key={server.id} />)}
         </div>
       </div>

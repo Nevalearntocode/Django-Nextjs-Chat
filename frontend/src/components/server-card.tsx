@@ -11,9 +11,10 @@ type Props = {
   banner: string;
   name: string;
   description: string;
+  icon: string;
 };
 
-export default function ServerCard({ banner, description, id, name }: Props) {
+export default function ServerCard({ banner, description, id, name, icon }: Props) {
   const router = useRouter();
   const onServerClick = (serverId: string) => {
     router.push(`/servers/${serverId}`);
@@ -25,7 +26,7 @@ export default function ServerCard({ banner, description, id, name }: Props) {
         <Image priority src={banner} alt={`${name}-${id}`} fill sizes="400px" />
       </div>
       <div className="flex items-center gap-4 rounded-lg pt-2">
-        <UserAvatar name={name} />
+        <UserAvatar name={name} image={icon} />
         <div className={cn("flex flex-col")}>
           <p className="text-lg font-semibold">{name}</p>
           <p className="line-clamp-1 text-sm font-light">{description}</p>

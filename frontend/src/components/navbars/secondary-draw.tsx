@@ -19,6 +19,10 @@ export default function SecondaryDraw({}: Props) {
   const serverId = useServerId();
   const { data: server } = useGetServerQuery(serverId);
   const isOwner = server && server.owner === user?.username;
+  const isMember =
+    server &&
+    server.members &&
+    server.members.find((member) => member.id === user?.id);
 
   const onAddChannel = () => {
     dispatch(openModal("channel"));
@@ -34,7 +38,7 @@ export default function SecondaryDraw({}: Props) {
         <p className={cn("hidden text-lg font-bold md:block")}>Channels</p>{" "}
       </div>
       <div className="mt-2 flex w-full flex-col gap-2 px-4 md:px-2">
-        <ChannelList serverId={serverId} />
+        <ChannelList serverId={serverId} isMember={!!isMember} />
       </div>
       {isOwner && isAuthenticated && (
         <div className="group mb-4 mt-auto flex w-full items-center justify-center pt-2">

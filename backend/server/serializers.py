@@ -67,10 +67,10 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
         if (
             "icon" in validated_data
             and validated_data["icon"] != None
-            and current_icon != None
         ):
             request_icon = self.upload_image(validated_data["icon"])
-            self.delete_image(current_icon, request_icon)
+            if current_icon != None:
+                self.delete_image(current_icon, request_icon)
             validated_data["icon"] = request_icon
         return super().update(instance, validated_data)
 
