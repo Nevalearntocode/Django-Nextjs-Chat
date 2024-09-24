@@ -32,4 +32,4 @@ urlpatterns = [
 
 websocket_urlpatterns = [
     path("ws/chat/<str:channels>/", ChatConsumer.as_asgi()),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
