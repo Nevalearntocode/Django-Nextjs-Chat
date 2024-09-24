@@ -77,8 +77,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "backend.wsgi.application"
-
+WSGI_APPLICATION = "djangobnb_backend.wsgi.application"
+ASGI_APPLICATION = "djangobnb_backend.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
