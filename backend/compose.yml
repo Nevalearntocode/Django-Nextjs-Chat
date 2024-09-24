@@ -15,7 +15,7 @@ services:
   django:
     build: ./
     image: nevalearntocode/djangonextjschat:latest
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000 
+    command: uvicorn backend.asgi:application --port 8000 --bind 0.0.0.0
     container_name: django
     volumes:
       - ./:/usr/src/django/
@@ -28,13 +28,13 @@ services:
     depends_on:
       # - database
       # - redis
-      - uvicorn
+      # - uvicorn
 
-  uvicorn:
-    build: ./
-    command: uvicorn backend.asgi:application --host 0.0.0.0 --port 8002
-    ports:
-      - 8002:8002
+  # uvicorn:
+  #   build: ./
+  #   command: uvicorn backend.asgi:application --host 0.0.0.0 --port 8002
+  #   ports:
+  #     - 8002:8002
 
   # database:
   #   image: postgres:16.3-alpine
