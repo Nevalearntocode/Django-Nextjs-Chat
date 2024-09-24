@@ -19,7 +19,7 @@ import dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-dotenv_file = BASE_DIR.parent / ".env.dev"
+dotenv_file = BASE_DIR / ".env.dev"
 
 if path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
@@ -151,6 +151,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 CORS_ALLOWED_ORIGINS = getenv("CORS_ALLOWED_ORIGINS").split(",")
+CORS_TRUSTED_ORIGINS = getenv("CORS_ALLOWED_ORIGINS").split(",")
+CORS_ORIGINS_WHITELIST = getenv("CORS_ALLOWED_ORIGINS").split(",")
 CORS_ALLOW_CREDENTIALS = True
 
 AUTH_COOKIE_HTTPONLY = getenv("AUTH_COOKIE_HTTPONLY") == "1"
@@ -160,7 +162,10 @@ AUTH_COOKIE_PATH = getenv("AUTH_COOKIE_PATH")
 AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 60 * 24
 AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24 * 7
 
-WEBSITE_URL = getenv("WEBSITE_URL")
+if DEBUG:
+    WEBSITE_URL = getenv("WEBSITE_URL")
+else:
+    WEBSITE_URL = getenv("PROD_WEBSITE_URL")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
