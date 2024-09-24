@@ -15,7 +15,7 @@ services:
   django:
     build: ./
     image: nevalearntocode/djangonextjschat:latest
-    command: uvicorn backend.asgi:application --port 8000 --bind 0.0.0.0
+    # command: uvicorn backend.asgi:application --port 8000 --bind 0.0.0.0
     container_name: django
     volumes:
       - ./:/usr/src/django/
