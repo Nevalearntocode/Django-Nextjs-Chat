@@ -21,7 +21,7 @@ export default function MobileManageMembers({ children }: Props) {
       <SheetContent
         side={"right"}
         aria-describedby={undefined}
-        className="flex flex-col gap-8"
+        className="flex flex-col"
       >
         <SheetHeader>
           <SheetTitle className="text-left">Manage members</SheetTitle>

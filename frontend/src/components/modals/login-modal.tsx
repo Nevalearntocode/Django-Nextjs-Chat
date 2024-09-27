@@ -65,7 +65,6 @@ const LoginModal = (props: Props) => {
     login(data)
       .unwrap()
       .then((res) => {
-        console.log(res)
         dispatch(setLogin(null));
         onOpenChange();
         form.reset();

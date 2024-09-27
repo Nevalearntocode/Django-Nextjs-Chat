@@ -163,3 +163,4 @@ notes
 .env.dev
 .env.prod
 Django Nextjs Chat.pem
+uvicorn.service

@@ -51,7 +51,7 @@ export default function MobileNavbar({}: Props) {
     logout()
       .unwrap()
       .then(() => {
-        router.push("/"); 
+        router.push("/");
         dispatch(setLogout());
       })
       .catch((err) => {
@@ -122,38 +122,42 @@ export default function MobileNavbar({}: Props) {
         <div className="flex w-full items-center justify-between">
           <Logo />
           <div className="flex items-center gap-4">
-            {isOwner && isAuthenticated ? (
+            {serverId && (
               <>
-                <MobileManageMembers>
-                  <Button
-                    className="rounded-full"
-                    size={`icon`}
-                    variant={`ghost`}
-                  >
-                    <Users2 className="h-4 w-4" />
-                  </Button>
-                </MobileManageMembers>
-                <MobileSettings>
-                  <Button
-                    className="rounded-full"
-                    size={`icon`}
-                    variant={`ghost`}
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </MobileSettings>
-              </>
-            ) : (
-              <>
-                {isMember && (
-                  <Button
-                    size={`icon`}
-                    variant={`destructive`}
-                    className="rounded-full"
-                    onClick={onLeaveServerClick}
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
+                {isOwner && isAuthenticated ? (
+                  <>
+                    <MobileManageMembers>
+                      <Button
+                        className="rounded-full"
+                        size={`icon`}
+                        variant={`ghost`}
+                      >
+                        <Users2 className="h-4 w-4" />
+                      </Button>
+                    </MobileManageMembers>
+                    <MobileSettings>
+                      <Button
+                        className="rounded-full"
+                        size={`icon`}
+                        variant={`ghost`}
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </MobileSettings>
+                  </>
+                ) : (
+                  <>
+                    {isMember && (
+                      <Button
+                        size={`icon`}
+                        variant={`destructive`}
+                        className="rounded-full"
+                        onClick={onLeaveServerClick}
+                      >
+                        <LogOut className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </>
                 )}
               </>
             )}

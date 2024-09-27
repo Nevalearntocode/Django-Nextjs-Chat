@@ -19,7 +19,7 @@ export default function PrimaryDraw({}: Props) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const { data } = useGetServersQuery({ category: category ?? undefined });
+  const { data: servers } = useGetServersQuery({ category: category ?? undefined });
 
   const onOpenAddServerModal = () => {
     if (!isAuthenticated) {
@@ -41,8 +41,7 @@ export default function PrimaryDraw({}: Props) {
           "mt-2 flex w-full flex-col items-center gap-2 overflow-auto",
         )}
       >
-        {/* TODO: make this a separate component later */}
-        {data?.map((server) => (
+        {servers?.map((server) => (
           <ServerTooltip key={server.id} {...server}>
             <div
               className={cn(

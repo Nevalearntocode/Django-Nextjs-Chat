@@ -117,7 +117,7 @@ export default function ManageMembers({}: Props) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <UserAvatar name={server.owner} />
-            <p>Admin</p>
+            <p>{server.owner}</p>
           </div>
           <TooltipProvider>
             <Tooltip>
