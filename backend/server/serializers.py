@@ -33,6 +33,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
     icon_file = FileFieldWithoutValidation(write_only=True)
     members = MembersSerializer(many=True, read_only=True)
     banned = MembersSerializer(many=True, read_only=True)
+    category = serializers.ReadOnlyField(source="category.name")
 
     class Meta:
         model = Server
@@ -64,10 +65,7 @@ class ServerSerializer(serializers.ModelSerializer, ImageSerializerMixin):
             request_banner = self.upload_image(validated_data["banner"])
             self.delete_image(current_banner, request_banner)
             validated_data["banner"] = request_banner
-        if (
-            "icon" in validated_data
-            and validated_data["icon"] != None
-        ):
+        if "icon" in validated_data and validated_data["icon"] != None:
             request_icon = self.upload_image(validated_data["icon"])
             if current_icon != None:
                 self.delete_image(current_icon, request_icon)

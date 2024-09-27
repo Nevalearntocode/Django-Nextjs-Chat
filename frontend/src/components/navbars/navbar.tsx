@@ -24,6 +24,8 @@ import {
 import { setIsloading, setLogout } from "@/redux/features/auth-slice";
 import ServerSettings from "../server-settings";
 import { useRouter } from "next/navigation";
+import { SearchServer } from "../search-server";
+import { useGetServersQuery } from "@/redux/features/server-slice";
 
 type Props = {};
 
@@ -33,6 +35,7 @@ export default function Navbar({}: Props) {
   const [logout] = useLogoutMutation();
   const { data: user } = useGetCurrentUserQuery();
   const router = useRouter();
+  const { data: servers } = useGetServersQuery({});
 
   const handleLogout = () => {
     dispatch(setIsloading(true));
@@ -120,6 +123,7 @@ export default function Navbar({}: Props) {
                 {renderDropdownMenuItems()}
               </DropdownMenuContent>
             </DropdownMenu>
+            {/* <SearchServer servers={servers ?? []} className="flex lg:hidden" /> */}
             <ServerSettings />
           </div>
         </div>

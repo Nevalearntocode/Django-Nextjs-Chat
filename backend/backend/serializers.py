@@ -1,7 +1,7 @@
 from backend.mixins import R2Mixin
 from rest_framework import serializers
-from server.validators import validate_icon_image_size, validate_image_file_extension
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
+
 
 class FileFieldWithoutValidation(serializers.FileField):
     def run_validation(self, data=serializers.empty):
@@ -14,9 +14,6 @@ class ImageSerializerMixin(R2Mixin):
         request = self.context.get("request")
         image = request.FILES.get(image_field_name)
         if image != None:
-            if image_field_name == "icon":
-                validate_icon_image_size(image)
-            # validate_image_file_extension(image)
             if not isinstance(image, (InMemoryUploadedFile, TemporaryUploadedFile)):
                 raise serializers.ValidationError("Uploaded image is not a valid file.")
             image = self.upload_image(image)

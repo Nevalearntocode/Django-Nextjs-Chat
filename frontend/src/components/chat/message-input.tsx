@@ -70,7 +70,7 @@ export const MessageInput = ({
           rows={1}
           onKeyDown={handleKeyDown}
         />
-        <div className="absolute bottom-0 right-0">
+        <div className="absolute bottom-0 right-2">
           <EmojiPicker
             onChange={(emoji: string) => onMessageChange(`${message} ${emoji}`)}
           />

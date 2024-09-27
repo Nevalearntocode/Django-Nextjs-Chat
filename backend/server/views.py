@@ -27,6 +27,7 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
         category = request.query_params.get("category", None)
         qty = request.query_params.get("qty", None)
         by_user = request.query_params.get("by_user", None)
+        name = request.query_params.get("name", None)
 
         if category is not None and category != "":
             queryset = queryset.filter(category__name__icontains=category)
@@ -38,6 +39,9 @@ class ServerViewSet(ModelViewSet, AdditionalMixins):
                 raise AuthenticationFailed(
                     "Authentication credentials were not provided."
                 )
+
+        if name is not None and name != "":
+            queryset = queryset.filter(name__icontains=name)
 
         if qty is not None:
             try:

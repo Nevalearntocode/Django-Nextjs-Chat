@@ -81,11 +81,14 @@ const LandingPage = ({ serverId }: { serverId: string }) => {
           sizes="( max-width: 768px ) 768px, ( max-width: 1200px ) 768px, 768px"
         />
       </div>
-      <div className="flex w-full flex-col items-center gap-2">
-        <h2 className="text-xl font-bold md:text-3xl">
-          Welcome to {server.name}
+      <div className="flex w-full flex-col items-center">
+        <h1 className="text-xl font-bold md:text-3xl">Welcome to</h1>
+        <h2 className="mb-4 text-lg font-semibold md:text-2xl">
+          {server.name}
         </h2>
-        <p className="text-nowrap text-center text-xs">{server.description}</p>
+        <p className="text-center text-xs md:text-nowrap">
+          {server.description}
+        </p>
       </div>
       {(!isMember || !isAuthenticated) && !isOwner && (
         <Button onClick={onJoinServer} disabled={isLoading}>

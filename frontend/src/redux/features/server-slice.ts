@@ -2,7 +2,7 @@ import { baseApi } from "../base-api";
 import { ServerFormType as ServerForm } from "@/components/modals/add-server-modal";
 import { UpdateServerFormType as UpdateServerForm } from "@/components/modals/server-settings-modal";
 
-type Server = {
+export type Server = {
   id: string;
   members: { id: string; username: string }[];
   banned: { id: string; username: string }[];
@@ -21,6 +21,7 @@ type ServerQueryParams = {
   category?: string;
   qty?: number;
   byUser?: boolean;
+  name?: string;
 };
 
 export function paramsAppender(args: ServerQueryParams) {
@@ -32,7 +33,10 @@ export function paramsAppender(args: ServerQueryParams) {
     params.append("qty", args.qty.toString());
   }
   if (args.byUser) {
-    params.append("byUser", args.byUser.toString());
+    params.append("by_user", args.byUser.toString());
+  }
+  if (args.name) {
+    params.append("name", args.name.toString());
   }
 
   return params;
