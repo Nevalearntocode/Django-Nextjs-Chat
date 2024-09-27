@@ -65,7 +65,7 @@ A real-time chat application built with Django, Django Channels, and Next.js.
 ### Deployment
 
 - The following Github repo is a guide to how to deploy the application with separate PostgreSQL database and Redis service.
-- [Deloyment guide](https://github.com/mitchtabian/HOWTO-django-channels-daphne)
+- [Deployment guide](https://github.com/mitchtabian/HOWTO-django-channels-daphne)
 - Notes: I'm using Uvicorn instead of Daphne and Next.js Frontend instead of Fullstack Django. Please refer to the guide as you see fit.
 
 ## Images
