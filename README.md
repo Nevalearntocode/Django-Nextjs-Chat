@@ -22,8 +22,8 @@ A real-time chat application built with Django, Django Channels, and Next.js.
 
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS and Redux
 - **Backend:** Django, Django Channels, Django REST Framework
-- **Database:** PostgreSQL (neon for production, docke for dev)
-- **Message broker:** Redis (Redi cloud for production, docker for dev)
+- **Database:** PostgreSQL (Neon for production, docker for dev)
+- **Message broker:** Redis (Redis cloud for production, docker for dev)
 - **Cloud Storage:** Cloudflare R2 for file uploads
 - **Deployment:** Django Backend on DigitalOcean, Next.js Frontend on Vercel
 
