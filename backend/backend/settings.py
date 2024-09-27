@@ -94,7 +94,6 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse(getenv("DATABASE_URL"))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -178,8 +177,6 @@ SPECTACULAR_SETTINGS = {
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "USER": "default",
-        "PASSWORD": "c7gxxsLue85DFAw2SNe2lpbh9XxpUSLi",
         "CONFIG": {
             "hosts": [
                 f"redis://{getenv('REDIS_USER')}:{getenv('REDIS_PASSWORD')}@{getenv('REDIS_HOST')}:{getenv('REDIS_PORT')}/0",
@@ -189,6 +186,7 @@ CHANNEL_LAYERS = {
     },
 }
 
+DATABASES["default"] = dj_database_url.parse(getenv("DATABASE_URL"))
 
 CLOUDFLARE_R2_ACCESS_KEY_ID = getenv("CLOUDFLARE_R2_ACCESS_KEY_ID")
 CLOUDFLARE_R2_SECRET_ACCESS_KEY = getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")

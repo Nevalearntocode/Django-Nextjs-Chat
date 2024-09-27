@@ -15,6 +15,7 @@ import { useGetCurrentUserQuery } from "@/redux/features/account-slice";
 import Image from "next/image";
 import ServerTooltip from "./tooltips/server-tooltip";
 import { SearchServer } from "./search-server";
+import Loading from "@/app/loading";
 
 type Props = {};
 
@@ -24,7 +25,7 @@ export default function PopularServers({}: Props) {
   const qty_param = searchParams.get("qty");
   const by_user_param = searchParams.get("by_user");
   const name_param = searchParams.get("name");
-  const { data: servers } = useGetServersQuery({
+  const { data: servers, isLoading } = useGetServersQuery({
     category: category_param ?? undefined,
     qty: qty_param ? parseInt(qty_param) : undefined,
     byUser: by_user_param ? by_user_param === "true" : undefined,
@@ -64,33 +65,37 @@ export default function PopularServers({}: Props) {
           <CategoryList />
         </div>
       </div>
-      <div className="mt-4 flex h-full flex-col gap-4 transition-all duration-300 ease-in-out md:mt-8 lg:mt-12">
-        {servers && servers.length > 0 ? (
-          <div className="grid grid-cols-2 gap-12 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {servers?.map((server) => (
-              <ServerTooltip key={server.id} {...server}>
-                <ServerCard {...server} />
-              </ServerTooltip>
-            ))}
-          </div>
-        ) : (
-          <div className="flex h-full flex-col items-center gap-4">
-            <h2 className="text-base font-bold lg:text-xl">
-              This category currently has no servers
-            </h2>{" "}
-            <div className="relative h-[300px] w-[300px] md:h-[400px] md:w-[400px]">
-              <Image src="/svgs/empty.svg" alt="not found" fill />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div className="mt-4 flex h-full flex-col gap-4 transition-all duration-300 ease-in-out md:mt-8 lg:mt-12">
+          {servers && servers.length > 0 ? (
+            <div className="grid grid-cols-2 gap-12 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {servers?.map((server) => (
+                <ServerTooltip key={server.id} {...server}>
+                  <ServerCard {...server} />
+                </ServerTooltip>
+              ))}
             </div>
-            <Button
-              className="gap-2"
-              onClick={() => dispatch(openModal("server"))}
-            >
-              Create one
-              <PlusCircle className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="flex h-full flex-col items-center gap-4">
+              <h2 className="text-base font-bold lg:text-xl">
+                This category currently has no servers
+              </h2>{" "}
+              <div className="relative h-[300px] w-[300px] md:h-[400px] md:w-[400px]">
+                <Image src="/svgs/empty.svg" alt="not found" fill />
+              </div>
+              <Button
+                className="gap-2"
+                onClick={() => dispatch(openModal("server"))}
+              >
+                Create one
+                <PlusCircle className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
