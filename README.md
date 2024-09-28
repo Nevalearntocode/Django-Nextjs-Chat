@@ -31,8 +31,8 @@ A real-time chat application built with Django, Django Channels, and Next.js.
 
 ### Prerequisites
 
-- Node.js (version)
-- Python (version)
+- Node.js (LTS version)
+- Python (LTS version)
 - Docker and Docker Compose (if run locally)
 
 ### Installation
